@@ -40,6 +40,8 @@ public:
     vtkSmartPointer<vtkActor> actor_left_green;
 	vtkSmartPointer<vtkPolyDataMapper> mapper_left_blue;
     vtkSmartPointer<vtkActor> actor_left_blue;
+	vtkSmartPointer<vtkPolyDataMapper> mapper_main_window;
+    vtkSmartPointer<vtkActor> actor_main_window;
 
 	vtkSmartPointer<vtkPolyDataMapper> mapper_center_red;
     vtkSmartPointer<vtkActor> actor_center_red;
@@ -59,6 +61,7 @@ public:
 	vtkSmartPointer<vtkRenderer> leftRenderer;
 	vtkSmartPointer<vtkRenderer> centerRenderer;
 	vtkSmartPointer<vtkRenderer> rightRenderer;
+	vtkSmartPointer<vtkRenderer> mainRenderer;
 	vtkSmartPointer<vtkImageProperty> imageSlice2prop ;
 	vtkSmartPointer<vtkProperty> actorprop_left_red ;
 	vtkSmartPointer<vtkProperty> actorprop_left_green ;
@@ -69,6 +72,7 @@ public:
 	vtkSmartPointer<vtkProperty> actorprop_right_red;
 	vtkSmartPointer<vtkProperty> actorprop_right_green;
 	vtkSmartPointer<vtkProperty> actorprop_right_blue;
+	//vtkSmartPointer<vtkProperty> actorprop_main_window;
 
   // Constructor/Destructor
   VolVis(); 
@@ -92,6 +96,7 @@ public slots:
   void renderLeft();
   void renderCenter();
   void renderRight();
+  void renderMain();
   void clearleft();
   void clearcenter();
   void clearright();
@@ -99,14 +104,17 @@ public slots:
   void renderBlueColor();
   void renderRedColor();
   void renderEraser();
-  void GetPointGradient(int,int,int,vtkImageData*);
+  void trainSVM();
+  void updateImageArrayafterTraining();
+  
+  //void GetPointGradient(int,int,int,vtkImageData*);
 
 
 
 
 
 
-
+  
 };
 
 #endif

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>786</width>
+    <width>1093</width>
     <height>1009</height>
    </rect>
   </property>
@@ -21,7 +21,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>500</y>
+      <y>550</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -34,7 +34,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>280</y>
+      <y>330</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -44,7 +44,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>280</y>
+      <y>330</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -54,7 +54,7 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>280</y>
+      <y>330</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -64,7 +64,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>500</y>
+      <y>550</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -77,7 +77,7 @@
     <property name="geometry">
      <rect>
       <x>290</x>
-      <y>500</y>
+      <y>550</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -90,7 +90,7 @@
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>520</y>
+      <y>570</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -103,7 +103,7 @@
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>520</y>
+      <y>570</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -116,7 +116,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>520</y>
+      <y>570</y>
       <width>31</width>
       <height>21</height>
      </rect>
@@ -174,45 +174,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="clearLeft">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>560</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Erase</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="clearCenter">
-    <property name="geometry">
-     <rect>
-      <x>330</x>
-      <y>560</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Erase</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="clearRight">
-    <property name="geometry">
-     <rect>
-      <x>600</x>
-      <y>560</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Erase</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButtonEraser">
     <property name="geometry">
      <rect>
@@ -226,13 +187,49 @@
      <string>ERASER</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="TrainSVM">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>600</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Train SVM</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PredictSVM">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>600</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Predict SVM</string>
+    </property>
+   </widget>
+   <widget class="QVTKWidget" name="qvtkWidgetMain" native="true">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>30</y>
+      <width>291</width>
+      <height>291</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>786</width>
+     <width>1093</width>
      <height>21</height>
     </rect>
    </property>
