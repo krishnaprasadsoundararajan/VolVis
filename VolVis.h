@@ -21,8 +21,6 @@ class VolVis : public QMainWindow, private Ui::VolVis
 {
   Q_OBJECT
 public:
-
-
 	
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_green;
@@ -97,24 +95,16 @@ public slots:
   void renderCenter();
   void renderRight();
   void renderMain();
-  void clearleft();
-  void clearcenter();
-  void clearright();
+  //void clearleft();
+  //void clearcenter();
+  //void clearright();
   void renderGreenColor();
   void renderBlueColor();
   void renderRedColor();
   void renderEraser();
   void trainSVM();
   void updateImageArrayafterTraining();
-  
-  //void GetPointGradient(int,int,int,vtkImageData*);
-
-
-
-
-
-
-  
+    
 };
 
 #endif
