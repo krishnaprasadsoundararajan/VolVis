@@ -27,6 +27,7 @@ FeatureVector::FeatureVector()
 	}
 void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rasterize_array))
 {
+	//rasterize_array = new int[x_dim*y_dim*z_dim];
 	//ofstream outputFileTest,outputFileTrain,outputFileIndex,outputFileIndex1;
     //outputFileTest.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Test.dat");
 	//outputFileTrain.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Train.dat");
@@ -68,6 +69,7 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 				   //colorImage1->GetPointGradient(x,y,z,colorImage1,g[3]);
 				    double sq_gradientMagnitude = (g[0]*g[0]) +(g[1]*g[1])+(g[2]*g[2]);
 				    double gradient_magnitude = sqrt(sq_gradientMagnitude);
+					//cout<<rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)];
 					if((rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)]!=0))// || ((x+(y*x_dim)+(z*x_dim*y_dim))%1000 == 0))
 						{
 							//cout<<"x+(y*x_dim)+(z*x_dim*y_dim)"<< x+(y*x_dim)+(z*x_dim*y_dim);

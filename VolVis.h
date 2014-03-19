@@ -21,7 +21,6 @@ class VolVis : public QMainWindow, private Ui::VolVis
 {
   Q_OBJECT
 public:
-	
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_green;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_blue;

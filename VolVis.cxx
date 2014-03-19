@@ -53,8 +53,9 @@
 
   
  int Color[3];
+ int key_value[5] = { 0,1,2,3,4};
  int left_sliceNumber=30,center_sliceNumber=40,right_sliceNumber=60;
- int rasterize_array[128][128][94],rasterize_array_checkcenter[128][128][94],rasterize_array_checkleft[128][128][94],rasterize_array_checkright[128][128][94];
+ int *rasterize_array,*rasterize_array_checkcenter,*rasterize_array_checkleft,*rasterize_array_checkright;
  int x_dim,y_dim,z_dim;
  
  
@@ -130,15 +131,14 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 	                 //Needs to be implemented..  Works fine for this Example
 				}
 				if(Color[0] == 255)//Red Color button pressed
-					rasterize_array[x_cor][y_cor][z_cor] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
 				else if(Color[1] == 255)// Green Color button pressed
-					rasterize_array[x_cor][y_cor][z_cor] = 2;
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
 				else if(Color[2] == 255)// Blue Color button pressed
-					rasterize_array[x_cor][y_cor][z_cor] = 3;
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
 				//Eraser button pressed and checks if the voxel is already colored. Need not erase when not drawn before.
-				else if((Color[0] == 333) && (rasterize_array[x_cor][y_cor][z_cor] ==1 || rasterize_array[x_cor][y_cor][z_cor]==2 || rasterize_array[x_cor][y_cor][z_cor]==3))
-					rasterize_array[x_cor][y_cor][z_cor] = 4;
-					
+				else if((Color[0] == 333) && (rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] ==1 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==2 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==3))
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
              }
 		 
 		 
@@ -217,14 +217,14 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 					           x_cor = center_sliceNumber;
 					           
 							   if(Color[0] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 1;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;
 							   else if(Color[1] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 2;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
 							   else if(Color[2] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 3;
-							   else if((Color[0] == 333) && (rasterize_array[x_cor][y_cor][z_cor]==1 || rasterize_array[x_cor][y_cor][z_cor]==2 || rasterize_array[x_cor][y_cor][z_cor]==3))
-									rasterize_array[x_cor][y_cor][z_cor] = 4;
-							  // cout<<"CENTER Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor][y_cor][z_cor]<<endl;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
+							   else if((Color[0] == 333) && (rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==1 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==2 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==3))
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
+							  // cout<<"CENTER Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
 						   }
 				}
 				else if(y_dim < z_dim)
@@ -310,14 +310,14 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 					           y_cor = right_sliceNumber;
 					            
 							   if(Color[0] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 1;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;
 							   else if(Color[1] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 2;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
 							   else if(Color[2] == 255)
-									rasterize_array[x_cor][y_cor][z_cor] = 3;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
 							   else if((Color[0] == 333))
-									rasterize_array[x_cor][y_cor][z_cor] = 4;
-							   //cout<<"RIGHT Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor][y_cor][z_cor]<<endl;
+									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
+							   //cout<<"RIGHT Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
 						   }
 					
 				}
@@ -329,9 +329,9 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 							   x_cor = (x_dim*(x-split))/(200 - (2*split));
 					z_cor = (z_dim*x)/200;
 					y_cor = right_sliceNumber;
-					rasterize_array[x_cor][y_cor][z_cor] = 1;
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;
 				}
-				//cout<<"Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor][y_cor][z_cor]<<endl;
+				//cout<<"Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
              }
 		 
 		 
@@ -381,13 +381,20 @@ VolVis::VolVis()
 	x_dim = colorImage->GetDimensions()[0], y_dim = colorImage->GetDimensions()[1], z_dim = colorImage->GetDimensions()[2];
 	
 	//Initalize arrays to check for rendering
-	//rasterize_array = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
-	//rasterize_array_checkcenter = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
-	//rasterize_array_checkleft = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
-	//rasterize_array_checkright = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
+	rasterize_array = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
+	rasterize_array_checkcenter = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
+	rasterize_array_checkleft = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
+	rasterize_array_checkright = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
 	
-	
-
+	for(int i = 0; i < x_dim; i++)
+		for(int j = 0; j < y_dim; j++)
+			for(int k = 0; k < z_dim; k++)
+			{
+				rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
+				rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
+				rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
+				rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
+			}
 
 
   //**********************************************************************************//
@@ -623,8 +630,95 @@ void VolVis::renderEraser()
 void VolVis::trainSVM()
 {
 	FeatureVector obj;
-	obj.CreateTestTrainData(128,128,94,&rasterize_array[0][0][0]);
+	obj.CreateTestTrainData(x_dim,y_dim,z_dim,&rasterize_array[0]);
+
+	/*PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
+	source->SetFileName("I:/assignment-06-octree-solution (1)/assignment-06-octree-solution/headsq-half.vti");
+	source->Update();
+	//PTR<vtkImageData>
+	vtkSmartPointer<vtkImageData> colorImage1;
+		colorImage1 = source->GetOutput();
+	colorImage1->UpdateInformation();
+	//rasterize_array = new int[x_dim*y_dim*z_dim];
+	//ofstream outputFileTest,outputFileTrain,outputFileIndex,outputFileIndex1;
+    //outputFileTest.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Test.dat");
+	//outputFileTrain.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Train.dat");
+	//outputFileIndex.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index.dat");
+	//outputFileIndex1.open("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index1.dat");
+
+	//Instead of using ofstream using FILE* reduces the time for writing the file by almost 50%
 	
+	FILE *outputFileTest,*outputFileTrain,*outputFileIndex,*outputFileIndex1;
+	outputFileTest = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Test.dat","w");
+	outputFileTrain = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Train.dat","w");
+	outputFileIndex = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index.dat","w");
+	outputFileIndex1 = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index1.dat","w");
+
+	cout<<"File created";
+	//cout<<"inside test train data "<<g[10]<<endl;
+	int extent[6];
+	unsigned long long t1,t2;
+	double *g = new double[3];
+	//double *g8 = new double[8];
+	//vtkSmartPointer<vtkDataArray> g8 = vtkSmartPointer<vtkDataArray>::New();
+	std::stringstream ssTest,ssTrain,ssIndex,ssIndex1;
+  extent[0] = extent[1] = extent[2] = extent[3] = extent[4] = extent[5] = 0; 
+  colorImage1->GetExtent(extent);
+ 
+  cout<<"Extents "<<extent[0]<<" "<<extent[1]<<" "<<extent[2]<<" "<<extent[3]<<" "<<extent[4]<<" "<<extent[5]<<" "<<endl;
+  std::clock_t c_start= std::clock();
+	for(int x = extent[0]; x < extent[1]; x++) //extent[1]
+	   for(int y = extent[2]; y < extent[3]; y++)//extent[3]
+		  for(int z = extent[4]; z < extent[5]; z++)//extent[5]
+		   {
+			   
+			   //cout<<x<<" "<<y<<" "<<z<<" "<<z<<endl;
+			  // GetPointGradient(x,y,z,colorImage1,g);
+			   colorImage1->GetPointGradient(x,y,z,colorImage1->GetPointData()->GetScalars(),g);
+			  // colorImage1->GetVoxelGradient(x,y,z,colorImage1->GetPointData()->GetScalars(),g8);
+			  // if(g[0]!=0 && g[1]!=0 && g[2]!=0)
+			   {
+				   //colorImage1->GetPointGradient(x,y,z,colorImage1,g[3]);
+				    double sq_gradientMagnitude = (g[0]*g[0]) +(g[1]*g[1])+(g[2]*g[2]);
+				    double gradient_magnitude = sqrt(sq_gradientMagnitude);
+					//cout<<rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)];
+					if((rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)]!=0))// || ((x+(y*x_dim)+(z*x_dim*y_dim))%1000 == 0))
+						{
+							//cout<<"x+(y*x_dim)+(z*x_dim*y_dim)"<< x+(y*x_dim)+(z*x_dim*y_dim);
+							//ssTrain<<rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]<<" "<<"1:"<<colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim))<<" 2:"<<g[0]<<" 3:" <<g[1]<<" 4:"<<g[2]<<" 5:"<<gradient_magnitude<<endl;
+				        	//ssIndex1<<x+(y*(extent[1] - extent[0]))+(z*(extent[1] - extent[0])*(extent[3] - extent[2]))<<endl;
+					        fprintf(outputFileTrain,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)],g[0],g[1],g[2],gradient_magnitude,colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim)),x,y,z);
+					        fprintf(outputFileIndex1,"%d\n",x+(y*(extent[1] - extent[0]))+(z*(extent[1] - extent[0])*(extent[3] - extent[2])));
+					   }
+					else
+					{
+						//cout<<"writing test"<<
+						
+						//cout<<"G: "<<g[0]<<" "<<g[1]<<" "<<g[2];
+			            //ssTest<<rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]<<" "<<"1:"<<g[0]<<" 2:"<<g[1]<<" 3:" <<g[2]<<" 4:"<<gradient_magnitude<<" 5:"<<colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim))<<endl;
+						//outputFileTest<<rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]<<" "<<"1:"<<g[0]<<" 2:"<<g[1]<<" 3:" <<g[2]<<" 4:"<<gradient_magnitude<<" 5:"<<colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim))<<endl;
+					   //ssIndex<<x+(y*(extent[1] - extent[0]))+(z*(extent[1] - extent[0])*(extent[3] - extent[2]))<<endl;
+					   fprintf(outputFileTest,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradient_magnitude,colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim)),x,y,z);
+					   fprintf(outputFileIndex,"%d\n",x+(y*(extent[1] - extent[0]))+(z*(extent[1] - extent[0])*(extent[3] - extent[2])));
+					}
+				
+						
+			   }}
+		  std::clock_t end = std::clock();
+		  cout<<"time taken " <<end-c_start<<endl;
+		  //outputFileTest<<ssTest;
+		  //outputFileTrain<<ssTrain;
+		  //outputFileIndex<<ssIndex;
+		  //outputFileIndex1<ssIndex1;
+		  //outputFileTest.close();
+		  //outputFileTrain.close();
+		  //outputFileIndex.close();
+		  //outputFileIndex1.close();
+		  fclose(outputFileTest);
+		  fclose(outputFileTrain);
+		  fclose(outputFileIndex);
+		  fclose(outputFileIndex1);
+		*/  cout<<"============================COMPLETED===================================================";
 }
 
 
@@ -708,7 +802,7 @@ void VolVis::renderMain()
 		    three++;
 		}
 
-		rasterize_array[x1][y1][z1] = prediction+5;
+		rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = prediction+5;
 		num = 0;
 		prediction = 0;
         p++;
@@ -887,9 +981,9 @@ void VolVis::renderLeft()
   for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
-			  if(((rasterize_array[i][j][k] == 1 || rasterize_array[i][j][k] == 2 || rasterize_array[i][j][k] == 3) && (rasterize_array_checkleft[i][j][k] != 1)) || (rasterize_array[i][j][k] == 4 && (rasterize_array_checkleft[i][j][k] == 1)))
+			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] != 1)) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
 			  {
-				  rasterize_array_checkleft[i][j][k]=1;
+				  rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
 				  vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
 				  vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 				  vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();			  
@@ -902,17 +996,17 @@ void VolVis::renderLeft()
 				  mapper->SetInputConnection(CubeSource->GetOutputPort());
 				  actor->SetMapper(mapper);
 				  actorprop_left_red = vtkSmartPointer<vtkProperty>::New();
-				 if(rasterize_array[i][j][k] == 1)
+				 if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
 					actorprop_left_red->SetColor(255,0,0);
-				 else if(rasterize_array[i][j][k] == 2)
+				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
 					actorprop_left_red->SetColor(0,255,0);
-				 else if(rasterize_array[i][j][k] == 3)
+				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
 					actorprop_left_red->SetColor(0,0,255);
-				 else if(rasterize_array[i][j][k] == 4)
+				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
 				 {
 					actorprop_left_red->SetColor(255,255,255);
-					rasterize_array[i][j][k] = 0;
-					rasterize_array_checkleft[i][j][k]=0;
+					rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
+					rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
 				 }
 				 actor->SetProperty(actorprop_left_red);
 				 leftRenderer->AddActor(actor);
@@ -941,9 +1035,9 @@ void VolVis::renderCenter()
   for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
-			  if(((rasterize_array[i][j][k] == 1 || rasterize_array[i][j][k] == 2 || rasterize_array[i][j][k] == 3) && (rasterize_array_checkcenter[i][j][k] != 1))|| (rasterize_array[i][j][k] == 4 && (rasterize_array_checkcenter[i][j][k] == 1)))
+			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] != 1))|| (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
 			  {
-				    rasterize_array_checkcenter[i][j][k] = 1;
+				    rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] = 1;
 					vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
 					vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 					vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
@@ -980,17 +1074,17 @@ void VolVis::renderCenter()
 					mapper->SetInputConnection(CubeSource->GetOutputPort());
 					actor->SetMapper(mapper);
 					actorprop_center_red = vtkSmartPointer<vtkProperty>::New();
-					if(rasterize_array[i][j][k] == 1)
+					if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
 						actorprop_center_red->SetColor(255,0,0);
-					else if(rasterize_array[i][j][k] == 2)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
 						actorprop_center_red->SetColor(0,255,0);
-					else if(rasterize_array[i][j][k] == 3)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
 						actorprop_center_red->SetColor(0,0,255);
-					else if(rasterize_array[i][j][k] == 4)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
 					{
 						actorprop_center_red->SetColor(255,255,255);
-					    rasterize_array[i][j][k] = 0;
-						rasterize_array_checkcenter[i][j][k] = 0;
+					    rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
+						rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
 					}
 					actor->SetProperty(actorprop_center_red);
 					centerRenderer->AddActor(actor);
@@ -1014,11 +1108,11 @@ void VolVis::renderRight()
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
 			  // rasterize_array is the array to visualize the volume as red, green or blue. Rasterize_array_checkright is the array to check if cube at that voxel is already drawn.                                                                                                              
-			  if (((rasterize_array[i][j][k] == 1 || rasterize_array[i][j][k] == 2 || rasterize_array[i][j][k] == 3) && (rasterize_array_checkright[i][j][k] != 1))|| (rasterize_array[i][j][k] == 4 && (rasterize_array_checkright[i][j][k] == 1)))
+			  if (((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] != 1))|| (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
 			  {
-				    if(rasterize_array[i][j][k] !=0)
+				    if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] !=0)
 					{
-						rasterize_array_checkright[i][j][k]=1;
+						rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
 						vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
 					    vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 					    vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
@@ -1065,17 +1159,17 @@ void VolVis::renderRight()
 		     	    actor->SetMapper(mapper);
 					
 				    actorprop_left_red = vtkSmartPointer<vtkProperty>::New();
-				    if(rasterize_array[i][j][k] == 1)
+				    if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
 						actorprop_left_red->SetColor(255,0,0);
-					else if(rasterize_array[i][j][k] == 2)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
 						actorprop_left_red->SetColor(0,255,0);
-					else if(rasterize_array[i][j][k] == 3)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
 						actorprop_left_red->SetColor(0,0,255);
-					else if(rasterize_array[i][j][k] == 4)
+					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
 					{
 						actorprop_center_red->SetColor(0,0,255);
-					    rasterize_array[i][j][k] =0;
-						rasterize_array_checkright[i][j][k] =0;
+					    rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] =0;
+						rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] =0;
 					}
 					actor->SetProperty(actorprop_left_red);
 					
