@@ -12,6 +12,7 @@
 #include <vtkProp3D.h>
 #include <QMainWindow>
 #include <vtkImageData.h>
+#include <vtkCubeSource.h>
 //#include <QPushButton>
 
 
@@ -21,6 +22,12 @@ class VolVis : public QMainWindow, private Ui::VolVis
 {
   Q_OBJECT
 public:
+	
+	vtkSmartPointer<vtkImageSlice> imageSlice;
+	vtkSmartPointer<vtkImageSlice> imageSlice2;
+	vtkSmartPointer<vtkImageSlice> imageSlice3;
+	vtkSmartPointer<vtkLookupTable> lut;
+	vtkSmartPointer<vtkImageData> colorImagePrediction;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_green;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_blue;
@@ -69,10 +76,16 @@ public:
 	vtkSmartPointer<vtkProperty> actorprop_right_red;
 	vtkSmartPointer<vtkProperty> actorprop_right_green;
 	vtkSmartPointer<vtkProperty> actorprop_right_blue;
+	vtkSmartPointer<vtkRenderWindow> renderWindow;
 	//vtkSmartPointer<vtkProperty> actorprop_main_window;
+	std::string loadFileName, predictionFileName, indexFileName;
+	double opacityRed,opacityGreen,opacityBlue;
+	int extent[6];
 
   // Constructor/Destructor
   VolVis(); 
+  void Render();
+  void RenderPrediction();
   ~VolVis();
 protected:
 	//void mouseMoveEvent(QMouseEvent *event);
@@ -103,6 +116,10 @@ public slots:
   void renderEraser();
   void trainSVM();
   void updateImageArrayafterTraining();
+  void loadFromFile();
+  void setPredictFile();
+  void setIndexFile();
+  void updateOpacity();
     
 };
 

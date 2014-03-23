@@ -48,6 +48,8 @@
 #include <ctime>
 #include<vtkDataArray.h>
 #include <vtkPointData.h> // Added to access the instensity colorImage1->GetPointData()-> ....
+#include <QtGui>
+
 
 #define PTR vtkSmartPointer
 
@@ -345,30 +347,19 @@ vtkStandardNewMacro(MouseInteractorStyleCenter4);
 vtkStandardNewMacro(MouseInteractorStyleRight4);
 
 // Constructor
-
-VolVis::VolVis() 
+void VolVis::Render()
 {
-   this->setupUi(this);
-   //***********************************************************************//
-   //Initializations                                                        //
-   //***********************************************************************//
-
-    vtkSmartPointer<vtkRenderWindow> renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
-    renderWindow->SetSize(600, 600);
-	
-	
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
-	
-	//Need to make this hard coded to runtime input
-	source->SetFileName("I:/assignment-06-octree-solution (1)/assignment-06-octree-solution/headsq-half.vti");
+	source->SetFileName(loadFileName.c_str());
 	source->Update();
 	
 	
 	vtkSmartPointer<vtkImageData> colorImage;
 	colorImage = source->GetOutput();
 	colorImage->UpdateInformation();
+	
 
-	int extent[6];
+	
 	colorImage->GetExtent(extent);
  
     double origin[3];
@@ -376,15 +367,15 @@ VolVis::VolVis()
  
     double spacing[3];
     colorImage->GetSpacing(spacing);
+
 	
 	//Setting the Dimensions from the image read
 	x_dim = colorImage->GetDimensions()[0], y_dim = colorImage->GetDimensions()[1], z_dim = colorImage->GetDimensions()[2];
-	
-	//Initalize arrays to check for rendering
 	rasterize_array = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
 	rasterize_array_checkcenter = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
 	rasterize_array_checkleft = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
 	rasterize_array_checkright = new int[colorImage->GetDimensions()[0]*colorImage->GetDimensions()[1]*colorImage->GetDimensions()[2]];
+	
 	
 	for(int i = 0; i < x_dim; i++)
 		for(int j = 0; j < y_dim; j++)
@@ -396,7 +387,6 @@ VolVis::VolVis()
 				rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
 			}
 
-
   //**********************************************************************************//
   //***********************************Left Renderer**********************************//
   //Set Connection to the mapper                                                      //
@@ -407,23 +397,14 @@ VolVis::VolVis()
   //Add to Renderer                                                                   //
   //**********************************************************************************//
   imageSliceMapper->SetInputConnection(colorImage->GetProducerPort());
-
-  
-  vtkSmartPointer<vtkImageSlice> imageSlice = vtkSmartPointer<vtkImageSlice>::New();
   imageSlice->SetMapper(imageSliceMapper);
 
   imageSliceMapper->SliceFacesCameraOn();
   imageSliceMapper->SetSliceNumber(30);
-
-  leftRenderer = vtkSmartPointer<vtkRenderer>::New();
-  double leftViewport[4] = {0.0, 0.0, 0.33, 0.4};
-  double centerViewport[4] ={0.33, 0.0, 0.66, 0.4};
-  double rightViewport[4] = {0.66, 0.0, 1.0, 0.4};
   leftRenderer->AddActor(imageSlice);
   leftRenderer->ResetCamera();//----------------------
   renderWindow->AddRenderer(leftRenderer);
   leftRenderer->SetBackground(.6, .5, .4);  
-  
   vtkCamera* leftCamera = leftRenderer->GetActiveCamera();
   leftCamera->ParallelProjectionOn();
  
@@ -438,9 +419,6 @@ VolVis::VolVis()
   
   leftCamera->SetFocalPoint(xc,yc,0.0);
   leftCamera->SetPosition(xc,yc,+d);
-  //==========================================================================================================================
-
-
   //**********************************************************************************//
   //************************Center Renderer*******************************************//
   //Set Connection to the mapper                                                      //
@@ -452,7 +430,7 @@ VolVis::VolVis()
   //**********************************************************************************//
   imageSliceMapper2->SetInputConnection(colorImage->GetProducerPort());
   
-  vtkSmartPointer<vtkImageSlice> imageSlice2 = vtkSmartPointer<vtkImageSlice>::New();
+  
   imageSlice2->SetMapper(imageSliceMapper2);
 
   imageSliceMapper2->SliceFacesCameraOn();
@@ -462,7 +440,7 @@ VolVis::VolVis()
   imageSlice2->RotateY(90);
   imageSliceMapper2->SetOrientationToX();
 
-  centerRenderer = vtkSmartPointer<vtkRenderer>::New();
+  
   centerRenderer->AddActor(imageSlice2); 
   centerRenderer->ResetCamera();
   
@@ -499,7 +477,7 @@ VolVis::VolVis()
  
   imageSliceMapper3->SetInputConnection(colorImage->GetProducerPort());
   
-  vtkSmartPointer<vtkImageSlice> imageSlice3 = vtkSmartPointer<vtkImageSlice>::New();
+  
   imageSlice3->SetMapper(imageSliceMapper3);
 	
   imageSliceMapper3->SliceFacesCameraOn();
@@ -508,7 +486,7 @@ VolVis::VolVis()
   imageSlice3->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
   imageSlice3->RotateX(-90);
 
-  rightRenderer = vtkSmartPointer<vtkRenderer>::New();
+  
   rightRenderer->AddActor(imageSlice3);
   rightRenderer->ResetCamera();
   renderWindow->AddRenderer(rightRenderer);
@@ -524,17 +502,10 @@ VolVis::VolVis()
   rightCamera->SetFocalPoint(xc,yc,0.0);
   rightCamera->SetPosition(xc,yc,+d);
   //rightCamera->SetFocalPoint(xcR,0,zcR);
-  //rightCamera->SetPosition(xcR,+dR,zcR+10); 
- //==========================================================================================================================
-
-
-   mainRenderer = vtkSmartPointer<vtkRenderer>::New();
-   mainRenderer->SetBackground(.6, .5, .4);    
- 
-   vtkSmartPointer<MouseInteractorStyle4> style1 = vtkSmartPointer<MouseInteractorStyle4>::New();
+  //rightCamera->SetPosition(xcR,+dR,zcR+10);
+  vtkSmartPointer<MouseInteractorStyle4> style1 = vtkSmartPointer<MouseInteractorStyle4>::New();
    vtkSmartPointer<MouseInteractorStyleCenter4> style2 = vtkSmartPointer<MouseInteractorStyleCenter4>::New();
    vtkSmartPointer<MouseInteractorStyleRight4> style3 = vtkSmartPointer<MouseInteractorStyleRight4>::New();
-   
    //**********************************************************************************//
   //******************************QT RELATED STUFF*************************************//
   //Set Background color for the buttons                                               //
@@ -544,27 +515,16 @@ VolVis::VolVis()
   //Set Signals and Slots to call methods on interactions                              //
   //Set Timers so that the functions are called repeatedly based on interval           //
   //***********************************************************************************//
+    this->horizontalSliderLeft->setMinimum(extent[4]);
+	this->horizontalSliderLeft->setMaximum(extent[5]);
    
-  
- 
-  
-  
-    this->pushButtonBlue->setAutoFillBackground(true);	
-	this->pushButtonRed->setAutoFillBackground(true);
-	this->pushButtonGreen->setAutoFillBackground(true);
-	
-	this->pushButtonBlue->setStyleSheet("background-color: rgb(0, 0, 255); color: rgb(255, 255, 255)");
-	this->pushButtonGreen->setStyleSheet("background-color: rgb(0, 255, 0); color: rgb(255, 255, 255)");
-	this->pushButtonRed->setStyleSheet("background-color: rgb(255, 0, 0); color: rgb(255, 255, 255)");
-	
-	this->horizontalSliderLeft->setMinimum(0);
-	this->horizontalSliderLeft->setMaximum(z_dim - 1);
-   
-	this->horizontalSliderCenter->setMinimum(0);
-	this->horizontalSliderCenter->setMaximum(x_dim - 1);
+	this->horizontalSliderCenter->setMinimum(extent[0]);
+	this->horizontalSliderCenter->setMaximum(extent[1]);
 
-	this->horizontalSliderRight->setMinimum(0);
-	this->horizontalSliderRight->setMaximum(y_dim - 1);
+	this->horizontalSliderRight->setMinimum(extent[2]);
+	this->horizontalSliderRight->setMaximum(extent[3]);
+  
+    
 	
 	this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->SetInteractorStyle(style1);
 	this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
@@ -587,16 +547,102 @@ VolVis::VolVis()
 	this->pushButtonRed->connect(this->pushButtonRed,SIGNAL(clicked()),this,SLOT(renderRedColor()));
 	this->pushButtonEraser->connect(this->pushButtonEraser,SIGNAL(clicked()),this,SLOT(renderEraser()));
 	this->TrainSVM->connect(this->TrainSVM,SIGNAL(clicked()),this,SLOT(trainSVM()));
-	this->PredictSVM->connect(this->PredictSVM,SIGNAL(clicked()),this,SLOT(updateImageArrayafterTraining()));
 	
-	//connect(timer, SIGNAL(timeout()), this, SLOT(renderMain()));
-	QTimer *timer = new QTimer(this);
+    QTimer *timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderLeft()));
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderCenter()));
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderRight()));
     
 	timer->start(20);
 }
+VolVis::VolVis() 
+{
+   this->setupUi(this);
+   //***********************************************************************//
+   //Initializations                                                        //
+   //***********************************************************************//
+
+    renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
+    renderWindow->SetSize(600, 600);
+	
+	//loadFileName = "I:\assignment-06-octree-solution (1)\assignment-06-octree-solution\headsq-half.vti";
+	//indexFileName = "E:\SemesterIII\Thesis\libsvm-3.17\windows\Index.dat";
+	//predictionFileName = "E:\SemesterIII\Thesis\libsvm-3.17\windows\PredictedOutput";
+	
+	QMenu *fileMenu; 
+	
+	QAction *loadFile;
+	fileMenu = menuBar()->addMenu(tr("&File"));
+    loadFile = new QAction(tr("&Load New File"), this);
+    loadFile->setShortcuts(QKeySequence::New);
+    loadFile->setStatusTip(tr("Load a new file"));
+    connect(loadFile, SIGNAL(triggered()), this, SLOT(loadFromFile()));
+    fileMenu->addAction(loadFile);
+	
+	QAction *predictFile;
+	predictFile = new QAction(tr("&Load Prediction File"), this);
+    predictFile->setShortcuts(QKeySequence::New);
+    predictFile->setStatusTip(tr("Load the file for prediction"));
+    connect(predictFile, SIGNAL(triggered()), this, SLOT(setPredictFile()));
+    fileMenu->addAction(predictFile);
+
+	QAction *indexFile;
+	indexFile = new QAction(tr("&Load Index File"), this);
+    indexFile->setShortcuts(QKeySequence::New);
+    indexFile->setStatusTip(tr("Load the file Index for prediction"));
+    connect(indexFile, SIGNAL(triggered()), this, SLOT(setIndexFile()));
+    fileMenu->addAction(indexFile);
+
+    
+	//Initalize arrays to check for rendering
+	
+
+  
+  
+  imageSlice = vtkSmartPointer<vtkImageSlice>::New();
+  
+
+  leftRenderer = vtkSmartPointer<vtkRenderer>::New();
+  //double leftViewport[4] = {0.0, 0.0, 0.33, 0.4};
+  //double centerViewport[4] ={0.33, 0.0, 0.66, 0.4};
+  //double rightViewport[4] = {0.66, 0.0, 1.0, 0.4};
+  
+  imageSlice2 = vtkSmartPointer<vtkImageSlice>::New();
+  centerRenderer = vtkSmartPointer<vtkRenderer>::New();
+  
+  imageSlice3 = vtkSmartPointer<vtkImageSlice>::New();
+  rightRenderer = vtkSmartPointer<vtkRenderer>::New();
+ 
+  //==========================================================================================================================
+
+
+   
+ //==========================================================================================================================
+
+
+   mainRenderer = vtkSmartPointer<vtkRenderer>::New();
+   mainRenderer->SetBackground(.6, .5, .4);    
+ 
+   
+   this->pushButtonBlue->setAutoFillBackground(true);	
+	this->pushButtonRed->setAutoFillBackground(true);
+	this->pushButtonGreen->setAutoFillBackground(true);
+	
+	this->pushButtonBlue->setStyleSheet("background-color: rgb(0, 0, 255); color: rgb(255, 255, 255)");
+	this->pushButtonGreen->setStyleSheet("background-color: rgb(0, 255, 0); color: rgb(255, 255, 255)");
+	this->pushButtonRed->setStyleSheet("background-color: rgb(255, 0, 0); color: rgb(255, 255, 255)");
+	
+	
+	
+	
+	
+	this->PredictSVM->connect(this->PredictSVM,SIGNAL(clicked()),this,SLOT(updateImageArrayafterTraining()));
+	
+	this->pushButtonOpacity->connect(this->pushButtonOpacity,SIGNAL(clicked()),this,SLOT(updateOpacity()));
+	//connect(timer, SIGNAL(timeout()), this, SLOT(renderMain()));
+	opacityRed = opacityBlue = opacityGreen = 0.5;
+}
+
 
 void VolVis::renderBlueColor()
 {
@@ -729,15 +775,27 @@ void VolVis::trainSVM()
 
 void VolVis::renderMain()
 {
+	if(indexFileName.empty() || predictionFileName.empty() || loadFileName.empty())
+	{
+		cout<<"inside if"<<endl;
+		QMessageBox msgBox;
+		msgBox.setText("Please Load Prediction,Index and Training File");
+		msgBox.exec();
+
+	}
+	else
+	{
+	cout<<"Button Pressed"<<endl;
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
-	source->SetFileName("I:/assignment-06-octree-solution (1)/assignment-06-octree-solution/headsq-half.vti");
+	source->SetFileName(loadFileName.c_str());
+	
 	source->Update();
 	//PTR<vtkImageData>
-	vtkSmartPointer<vtkImageData> colorImage;
-		colorImage = source->GetOutput();
-	colorImage->UpdateInformation();
+	//vtkSmartPointer<vtkImageData> colorImage;
+		colorImagePrediction = source->GetOutput();
+	colorImagePrediction->UpdateInformation();
 	int one=0,two=0,three =0;
-	 vtkSmartPointer<vtkLookupTable> lut =
+	 lut =
     vtkSmartPointer<vtkLookupTable>::New();
   //int tableSize = std::max(resolution*resolution + 1, 10);
   lut->SetNumberOfTableValues(128*128*94+1);
@@ -745,11 +803,13 @@ void VolVis::renderMain()
   lut->Build();
 	//============================================
 	cout<<"called============";
- 	int *v = new int[128*128*94];
-	int *pv = new int[128*128*94];
+ 	int *v = new int[x_dim*y_dim*z_dim];
+	int *pv = new int[x_dim*y_dim*z_dim];
     int num = 0,prediction = 0;
-	 ifstream fin("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index.dat");
-	 ifstream fin1("E:/SemesterIII/Thesis/libsvm-3.17/windows/PredictedOutput");
+	
+		cout<<"inside else"<<endl;
+	ifstream fin(indexFileName);
+	ifstream fin1(predictionFileName);
     char buffer[512],buffer_prediction[512];
     int i = 0;
     int bytes = 0, bytes_prediction = 0;
@@ -781,24 +841,26 @@ void VolVis::renderMain()
             v[i++] = num;
             //pv[i++] = prediction;
 		}
-		int prod =(x_dim*y_dim);
-		int x1 = num % x_dim;
-		int y1 = (num%prod)/x_dim;
-		int z1 = num/prod;
-		z1++;
+		int prod = (extent[1] - extent[0])*(extent[3] - extent[2]);
+		int x1 = num % ((extent[1] - extent[0]));
+		int y1 = (num% prod) / x_dim;
+		int z1 = num /prod;
 		if(prediction==1)
 		{
-			colorImage->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+			lut->SetTableValue(num     , 1     , 0     , 0, 1);
 			one++;
 		}
 		else if(prediction==2)
 		{
-			colorImage->SetScalarComponentFromDouble(x1,y1,z1,0,550);
+			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,550);
+			lut->SetTableValue(num     , 0     , 1     , 0, 1);
 		    two++;
 		}
 		else if(prediction==3)
 		{
-			colorImage->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
+			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
+			lut->SetTableValue(num     , 0     , 0     , 1, 1);
 		    three++;
 		}
 
@@ -845,13 +907,23 @@ void VolVis::renderMain()
     delete [] v;
 	cout<<"The values are read successfully predicted by the SVM and the scalar values are set accordinly"<<endl;
 	//--------------------------------------------
-   vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction =
+ 
+	VolVis::RenderPrediction();		 
+ }
+}
+
+void VolVis::RenderPrediction()
+{
+	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction =
       vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
   
+
+
      vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
        vtkSmartPointer<vtkVolumeRayCastMapper>::New();
-     volumeMapper->SetInputConnection(colorImage->GetProducerPort());
+     volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
      volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
+	 
     // The color transfer function maps voxel intensities to colors.
     // It is modality-specific, and often anatomy-specific as well.
     // The goal is to one color for flesh (between 500 and 1000)
@@ -863,26 +935,23 @@ void VolVis::renderMain()
 	//volumeColor->DiscretizeOn();
 	//volumeColor->SetNumberOfValues(3);
 	 volumeColor->AddRGBPoint(0,    0.0, 0.0, 0.0);
-	  volumeColor->AddRGBPoint(100,  1.0, 0, 0);
-	  volumeColor->AddRGBPoint(200,  1.0, 0, 0);
-      volumeColor->AddRGBPoint(500, 0, 1, 0);
-	  volumeColor->AddRGBPoint(600, 0, 1, 0);
-	  volumeColor->AddRGBPoint(1000, 0, 0, 1);
-	  volumeColor->AddRGBPoint(1400, 0, 0, 1);
-	  
+	  volumeColor->AddRGBPoint(150,  1.0, 0, 0);
+      volumeColor->AddRGBPoint(550, 0, 1, 0);
+	  volumeColor->AddRGBPoint(1200, 0, 0, 1);
+	 
     // The opacity transfer function is used to control the opacity
     // of different tissue types.
     vtkSmartPointer<vtkPiecewiseFunction> volumeScalarOpacity =
        vtkSmartPointer<vtkPiecewiseFunction>::New();
-     volumeScalarOpacity->AddPoint(0,    0.0);
-	 volumeScalarOpacity->AddPoint(99,    0.0);
-     volumeScalarOpacity->AddPoint(100,  0.5);
-	 volumeScalarOpacity->AddPoint(200,  0.5);
-     volumeScalarOpacity->AddPoint(500, 0.7);
-	 volumeScalarOpacity->AddPoint(600, 0.7);
-     volumeScalarOpacity->AddPoint(1000, 0.2);
-	 volumeScalarOpacity->AddPoint(1400, 0.2);
-	 volumeScalarOpacity->AddPoint(1401, 0);
+     volumeScalarOpacity->AddPoint(0,    0);
+	 volumeScalarOpacity->AddPoint(99,    0);
+     volumeScalarOpacity->AddPoint(100,  opacityRed);
+	 volumeScalarOpacity->AddPoint(200,  opacityRed);
+     volumeScalarOpacity->AddPoint(500, opacityGreen);
+	 volumeScalarOpacity->AddPoint(600, opacityGreen);
+	 volumeScalarOpacity->AddPoint(1000, opacityBlue);
+	 volumeScalarOpacity->AddPoint(1400, opacityBlue);
+	 volumeScalarOpacity->AddPoint(140001, 0);
    
      // The gradient opacity function is used to decrease the opacity
      // in the "flat" regions of the volume while maintaining the opacity
@@ -923,7 +992,8 @@ void VolVis::renderMain()
      vtkSmartPointer<vtkVolume>::New();
     volume->SetMapper(volumeMapper);
     volume->SetProperty(volumeProperty);
- 
+    
+	mainRenderer->RemoveAllViewProps();
     // Finally, add the volume to the renderer
     mainRenderer->AddViewProp(volume);
  
@@ -934,7 +1004,7 @@ void VolVis::renderMain()
 	//lut->SetRange( 0.0, 255.0 );
     //lut->SetHueRange( 0.0, 0.1 );
     //lut->SetValueRange( 0.4, 0.8 );
-    lut->Build();
+   // lut->Build();
     //firstColorMapper->SetLookupTable( lut );
 	//vtkSmartPointer<vtkImageActor> imgActor = 
       //vtkSmartPointer<vtkImageActor>::New();
@@ -954,10 +1024,9 @@ void VolVis::renderMain()
     camera->SetFocalPoint(c[0], c[1], c[2]);
     camera->SetPosition(c[0] + 400, c[1], c[2]);
     camera->SetViewUp(0, 0, -1);
-  
-    
-    
-  
+
+     
+   
   		  
 	this->qvtkWidgetMain->GetRenderWindow()->GetInteractor()->ReInitialize();
 	this->qvtkWidgetMain->GetRenderWindow()->GetInteractor()->Render();
@@ -967,10 +1036,7 @@ void VolVis::renderMain()
 	this->qvtkWidgetMain->update();	
  
  cout<<endl<<"The Volume is rendered!!!!"<<endl;
-			 
- 
 }
-			  
 //**************************************************************************************************************************************//
 // This function is called by the QT Timer. This function checks for the mouse moves and it updates the render with a cube to visualize //
 // This function visualizes the left side of the renderer                                                                              //
@@ -1232,7 +1298,59 @@ void VolVis::updateImageArrayafterTraining()
 	cout<<"called============";
 	VolVis::renderMain();
 }
-	
+
+void VolVis::loadFromFile()
+ {
+	 cout<<"Clciked";
+     QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Open Address Book"), "",
+         tr("All Files (*)"));
+     if (fileName.isEmpty())
+         return;
+     else {
+		 loadFileName = fileName.toUtf8().constData();
+		 cout<<"loadFileName :"<<loadFileName;
+		 VolVis::Render();
+          }
+	 }
+
+void VolVis::setPredictFile()
+ {
+	 
+     QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Set the Prediction File"), "",
+         tr(";All Files (*)"));
+     if (fileName.isEmpty())
+         return;
+     else {
+		 predictionFileName = fileName.toUtf8().constData();
+          }
+	 }
+
+void VolVis::setIndexFile()
+ {
+	 cout<<"clocled";
+     QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Set the Index File for Prediction"), "",
+         tr("All Files (*)"));
+     if (fileName.isEmpty())
+         return;
+     else {
+		 indexFileName = fileName.toUtf8().constData();
+          }
+	 }
+
+ 
+void VolVis::updateOpacity()
+{
+	opacityBlue=this->doubleSpinBoxBlue->value();
+	opacityRed = this->doubleSpinBoxRed->value();
+	opacityGreen = this->doubleSpinBoxGreen->value();
+	VolVis::renderMain();
+}
+
+
+
 //*****************************************************************************//
 // Function called at the end.                                                 //
 //*****************************************************************************//
@@ -1241,6 +1359,7 @@ void VolVis::slotExit()
 {
   qApp->exit();
 }
+
 
 //*****************************************************************************//
 // Destructor is called. Mappers are set to null                               //
