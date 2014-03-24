@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1093</width>
+    <width>1308</width>
     <height>1009</height>
    </rect>
   </property>
@@ -20,8 +20,8 @@
    <widget class="QSlider" name="horizontalSliderLeft">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>550</y>
+      <x>10</x>
+      <y>680</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -33,8 +33,8 @@
    <widget class="QVTKWidget" name="qvtkWidgetLeft" native="true">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>330</y>
+      <x>20</x>
+      <y>470</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -43,8 +43,8 @@
    <widget class="QVTKWidget" name="qvtkWidgetRight" native="true">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>330</y>
+      <x>20</x>
+      <y>0</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -53,8 +53,8 @@
    <widget class="QVTKWidget" name="qvtkWidgetCenter" native="true">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>330</y>
+      <x>20</x>
+      <y>240</y>
       <width>201</width>
       <height>201</height>
      </rect>
@@ -63,8 +63,8 @@
    <widget class="QSlider" name="horizontalSliderRight">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>550</y>
+      <x>20</x>
+      <y>210</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -76,8 +76,8 @@
    <widget class="QSlider" name="horizontalSliderCenter">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>550</y>
+      <x>20</x>
+      <y>450</y>
       <width>160</width>
       <height>19</height>
      </rect>
@@ -86,50 +86,11 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>570</y>
-      <width>31</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Slicing</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>570</y>
-      <width>31</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Slicing</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>620</x>
-      <y>570</y>
-      <width>31</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Slicing</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButtonBlue">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>180</y>
+      <x>1200</x>
+      <y>160</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -151,8 +112,8 @@
    <widget class="QPushButton" name="pushButtonRed">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>60</y>
+      <x>1200</x>
+      <y>50</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -164,8 +125,8 @@
    <widget class="QPushButton" name="pushButtonGreen">
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>120</y>
+      <x>1200</x>
+      <y>110</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -177,8 +138,8 @@
    <widget class="QPushButton" name="pushButtonEraser">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>240</y>
+      <x>1200</x>
+      <y>220</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -190,8 +151,8 @@
    <widget class="QPushButton" name="TrainSVM">
     <property name="geometry">
      <rect>
-      <x>170</x>
-      <y>600</y>
+      <x>1090</x>
+      <y>280</y>
       <width>131</width>
       <height>51</height>
      </rect>
@@ -203,8 +164,8 @@
    <widget class="QPushButton" name="PredictSVM">
     <property name="geometry">
      <rect>
-      <x>400</x>
-      <y>600</y>
+      <x>1090</x>
+      <y>360</y>
       <width>131</width>
       <height>51</height>
      </rect>
@@ -216,18 +177,18 @@
    <widget class="QVTKWidget" name="qvtkWidgetMain" native="true">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>30</y>
-      <width>291</width>
-      <height>291</height>
+      <x>260</x>
+      <y>50</y>
+      <width>751</width>
+      <height>521</height>
      </rect>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="doubleSpinBoxRed">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>60</y>
+      <x>1070</x>
+      <y>50</y>
       <width>81</width>
       <height>22</height>
      </rect>
@@ -245,8 +206,8 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxGreen">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>120</y>
+      <x>1070</x>
+      <y>110</y>
       <width>81</width>
       <height>22</height>
      </rect>
@@ -264,8 +225,8 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxBlue">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>180</y>
+      <x>1070</x>
+      <y>160</y>
       <width>81</width>
       <height>22</height>
      </rect>
@@ -283,8 +244,8 @@
    <widget class="QPushButton" name="pushButtonOpacity">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>240</y>
+      <x>1070</x>
+      <y>220</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -296,8 +257,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>810</x>
-      <y>30</y>
+      <x>1070</x>
+      <y>20</y>
       <width>46</width>
       <height>13</height>
      </rect>
@@ -309,8 +270,8 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>690</x>
-      <y>30</y>
+      <x>1200</x>
+      <y>20</y>
       <width>46</width>
       <height>13</height>
      </rect>
@@ -325,7 +286,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1093</width>
+     <width>1308</width>
      <height>21</height>
     </rect>
    </property>

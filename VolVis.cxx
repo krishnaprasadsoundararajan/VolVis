@@ -65,7 +65,8 @@
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper2 = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper3 = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapperMain = vtkSmartPointer<vtkImageSliceMapper>::New();
- vtkSmartPointer<vtkImageData> colorImage;
+ //vtkSmartPointer<vtkImageSliceMapper> imageSliceMapperMainLeft = vtkSmartPointer<vtkImageSliceMapper>::New();
+ //vtkSmartPointer<vtkImageData> colorImage;
 
 //************************************************************************//
 //A Class to check for mouse interatcions in the Left Side Renderer Window//
@@ -435,7 +436,6 @@ void VolVis::Render()
 
   imageSliceMapper2->SliceFacesCameraOn();
   imageSliceMapper2->SetSliceNumber(30);
-  
   imageSlice2->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
   imageSlice2->RotateY(90);
   imageSliceMapper2->SetOrientationToX();
@@ -506,7 +506,7 @@ void VolVis::Render()
   vtkSmartPointer<MouseInteractorStyle4> style1 = vtkSmartPointer<MouseInteractorStyle4>::New();
    vtkSmartPointer<MouseInteractorStyleCenter4> style2 = vtkSmartPointer<MouseInteractorStyleCenter4>::New();
    vtkSmartPointer<MouseInteractorStyleRight4> style3 = vtkSmartPointer<MouseInteractorStyleRight4>::New();
-   //**********************************************************************************//
+  //**********************************************************************************//
   //******************************QT RELATED STUFF*************************************//
   //Set Background color for the buttons                                               //
   //Set the maximum and minimum Value for the Sliders                                  //
@@ -537,6 +537,7 @@ void VolVis::Render()
   
   	 
     // Set up action signals and slots
+	//this->horizontalSliderMainCenter->connect(this->horizontalSliderMainCenter,SIGNAL(valueChanged(int)),this,SLOT(setSliceNumberMainLeft(int)));
 	this->horizontalSliderLeft->connect(this->horizontalSliderLeft,SIGNAL(valueChanged(int)),this,SLOT(setSliceNumberLeft(int))); 
 	this->horizontalSliderCenter->connect(this->horizontalSliderCenter,SIGNAL(valueChanged(int)),this,SLOT(setSliceNumberCenter(int))); 
 	this->horizontalSliderRight->connect(this->horizontalSliderRight,SIGNAL(valueChanged(int)),this,SLOT(setSliceNumberRight(int))); 
@@ -554,7 +555,7 @@ void VolVis::Render()
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderRight()));
     
 	timer->start(20);
-}
+}	
 VolVis::VolVis() 
 {
    this->setupUi(this);
@@ -563,8 +564,12 @@ VolVis::VolVis()
    //***********************************************************************//
 
     renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
-    renderWindow->SetSize(600, 600);
+    renderWindow->SetSize(800, 600);
 	
+	renderWindow->FullScreenOn();
+	renderWindow->Render();
+	//renderWindow->SetWindowName("Transfer Function based Direct Volume Rendering - Dr.Thomas Schultz, Krishna Prasad Soundararajan");
+
 	//loadFileName = "I:\assignment-06-octree-solution (1)\assignment-06-octree-solution\headsq-half.vti";
 	//indexFileName = "E:\SemesterIII\Thesis\libsvm-3.17\windows\Index.dat";
 	//predictionFileName = "E:\SemesterIII\Thesis\libsvm-3.17\windows\PredictedOutput";
@@ -600,9 +605,12 @@ VolVis::VolVis()
   
   
   imageSlice = vtkSmartPointer<vtkImageSlice>::New();
+  //imageSliceMainLeft = vtkSmartPointer<vtkImageSlice>::New();
+  
   
 
   leftRenderer = vtkSmartPointer<vtkRenderer>::New();
+  //mainRendererLeft = vtkSmartPointer<vtkRenderer>::New();
   //double leftViewport[4] = {0.0, 0.0, 0.33, 0.4};
   //double centerViewport[4] ={0.33, 0.0, 0.66, 0.4};
   //double rightViewport[4] = {0.66, 0.0, 1.0, 0.4};
@@ -673,6 +681,85 @@ void VolVis::renderEraser()
 	Color[2] = 999;
 	cout<<"Eraser " <<endl;
 }
+/*void VolVis::renderMainLeft()
+{    
+	double origin[3];
+    colorImage->GetOrigin(origin);
+ 
+    double spacing[3];
+    colorImage->GetSpacing(spacing);
+	vtkSmartPointer<vtkLookupTable> lut123 = vtkSmartPointer<vtkLookupTable>::New();
+  //int tableSize = std::max(resolution*resolution + 1, 10);
+  lut123->SetNumberOfTableValues(x_dim*y_dim*z_dim);
+  //lut->SetNumberOfColors(4);
+  lut123->Build();
+  imageSliceMapperMainLeft->SetInputConnection(colorImage->GetProducerPort());
+  imageSliceMainLeft->SetMapper(imageSliceMapper);
+  imageSliceMainLeft->GetProperty()->SetLookupTable(lut);
+  imageSliceMainLeft->Update();
+  imageSliceMapperMainLeft->SliceFacesCameraOn();
+  imageSliceMapperMainLeft->SetSliceNumber(30);
+  mainRendererLeft->AddActor(imageSliceMainLeft);
+  for( int i =0 ;i< x_dim;i++)
+	  for( int j =0 ;j< y_dim;j++)
+		  for( int k =0 ;k< z_dim;k++)
+			  lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),0,0,0,1);
+  lut->Build();
+	 for( int i =0 ; i < x_dim; i++)
+	  for( int j =0 ; j < y_dim; j++)
+		  for( int k = 0 ; k < z_dim; k++)
+		  {
+			  if((rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 6) || (rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 1))
+			  lut123->SetTableValue((i+(k*x_dim)+(k*x_dim*y_dim)),1,0,0,1);
+			  else if((rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 7) || (rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 2))
+			  lut123->SetTableValue(i+(k*x_dim)+(k*x_dim*y_dim),0,1,0,1);
+			  else if((rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 8) || (rasterize_array[i+(k*x_dim)+(k*x_dim*y_dim)] == 3))
+			  lut123->SetTableValue(i+(k*x_dim)+(k*x_dim*y_dim),0.5,0.6,0.2,1);
+			  else
+			  {
+				  //cout<<i+(j*x_dim)+(k*x_dim*y_dim)<<endl;
+				  lut123->SetTableValue(i+(k*x_dim)+(k*x_dim*y_dim),0.6,0.6,0,1);
+			  }
+		  }
+			//  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] != 1)) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
+			 // {
+				//  rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
+				  
+			 // }
+			  //leftRenderer->AddActor(imageSlice);
+		  imageSliceMainLeft->GetProperty()->SetLookupTable(lut);
+  imageSliceMainLeft->Update();
+  imageSliceMapperMainLeft->SliceFacesCameraOn();
+  imageSliceMapperMainLeft->SetSliceNumber(30);
+  mainRendererLeft->AddActor(imageSliceMainLeft);
+  mainRendererLeft->ResetCamera();//----------------------
+  renderWindow->AddRenderer(mainRendererLeft);
+  mainRendererLeft->SetBackground(.6, .5, .4);  
+  vtkCamera* mainLeftCamera = mainRendererLeft->GetActiveCamera();
+  mainLeftCamera->ParallelProjectionOn();
+ 
+  float xc = origin[0] + 0.5*(extent[0] + extent[1])*spacing[0];
+  float yc = origin[1] + 0.5*(extent[2] + extent[3])*spacing[1];
+//  float xd = (extent[1] - extent[0] + 1)*spacing[0]; // not used
+  float yd = (extent[3] - extent[2] + 1)*spacing[1];
+ 
+  float d = mainLeftCamera->GetDistance();
+ 
+  mainLeftCamera->SetParallelScale(0.5f*static_cast<float>(yd));
+  
+  mainLeftCamera->SetFocalPoint(xc,yc,0.0);
+  mainLeftCamera->SetPosition(xc,yc,+d);
+	this->qvtkWidgetMainCenter->GetRenderWindow()->RemoveRenderer(mainRendererLeft);		  
+  this->qvtkWidgetMainCenter->GetRenderWindow()->GetInteractor()->ReInitialize();
+	this->qvtkWidgetMainCenter->GetRenderWindow()->GetInteractor()->Render();
+	
+	//this->qvtkWidgetRight->GetRenderWindow()->GetInteractor()->ReInitialize();
+	//this->qvtkWidgetRight->GetRenderWindow()->GetInteractor()->Render();
+	this->qvtkWidgetMainCenter->GetRenderWindow()->AddRenderer(mainRendererLeft);
+	this->qvtkWidgetMainCenter->GetRenderWindow()->Render();
+	this->qvtkWidgetMainCenter->update();
+			  
+}*/
 void VolVis::trainSVM()
 {
 	FeatureVector obj;
@@ -792,18 +879,17 @@ void VolVis::renderMain()
 	source->Update();
 	//PTR<vtkImageData>
 	//vtkSmartPointer<vtkImageData> colorImage;
-		colorImagePrediction = source->GetOutput();
+	colorImagePrediction = source->GetOutput();
 	colorImagePrediction->UpdateInformation();
 	int one=0,two=0,three =0;
-	 lut =
-    vtkSmartPointer<vtkLookupTable>::New();
+	//lut = vtkSmartPointer<vtkLookupTable>::New();
   //int tableSize = std::max(resolution*resolution + 1, 10);
-  lut->SetNumberOfTableValues(128*128*94+1);
+  //lut->SetNumberOfTableValues(128*128*93);
   //lut->SetNumberOfColors(4);
-  lut->Build();
+  //lut->Build();
 	//============================================
 	cout<<"called============";
- 	int *v = new int[x_dim*y_dim*z_dim];
+ /*	int *v = new int[x_dim*y_dim*z_dim];
 	int *pv = new int[x_dim*y_dim*z_dim];
     int num = 0,prediction = 0;
 	
@@ -847,24 +933,30 @@ void VolVis::renderMain()
 		int z1 = num /prod;
 		if(prediction==1)
 		{
-			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+			//colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,150);
 			lut->SetTableValue(num     , 1     , 0     , 0, 1);
 			one++;
 		}
 		else if(prediction==2)
 		{
-			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,550);
+			//colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,550);
 			lut->SetTableValue(num     , 0     , 1     , 0, 1);
 		    two++;
 		}
 		else if(prediction==3)
 		{
-			colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
-			lut->SetTableValue(num     , 0     , 0     , 1, 1);
+			//colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
+			lut->SetTableValue(num     , 0     , 0     , 0, 1);
 		    three++;
 		}
+		else 
+			cout << num<<endl;
 
 		rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = prediction+5;
+		if(((x1+(y1*x_dim)+(z1*x_dim*y_dim)) ==640) || ((x1+(y1*x_dim)+(z1*x_dim*y_dim)) ==896) || ((x1+(y1*x_dim)+(z1*x_dim*y_dim)) ==1152))
+		{
+			cout<<"Num :"<<((x1+(y1*x_dim)+(z1*x_dim*y_dim)))<<endl;
+		}
 		num = 0;
 		prediction = 0;
         p++;
@@ -904,21 +996,101 @@ void VolVis::renderMain()
     }
     cout << "Number of values read " << i <<" one :"<<one<<"two :"<<two<<" three :"<<three<< endl;
 
-    delete [] v;
+    delete [] v;*/
+
+ //for( int i =0 ;i<x_dim;i++)
+	//  for( int j =0 ;j< y_dim;j++)
+		//  for( int k =0 ;k< z_dim;k++)
+			//  lut->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),0,0,0,1);
+//lut->Build();
+int num1,num2;
+std::string line,line1;
+ifstream myfile (predictionFileName);
+ifstream myfile1(indexFileName);
+ if (myfile.is_open())
+  {
+    while (! myfile.eof() )
+    {
+      getline(myfile,line);
+	  getline(myfile1,line1);
+	  num1 = atoi(line1.c_str());
+		  num2 = atoi(line.c_str());
+		int prod = x_dim*y_dim;
+		int x1 = num1 % x_dim;
+		int y1 = (num1% prod) / x_dim;
+		int z1 = num1 /prod;
+	 // cout<<atoi(line.c_str())<<" "<<atoi(line1.c_str())<<endl;
+     if (num2==1)
+      {
+	//	  lut->SetTableValue(num1,1,0,0.7,1);
+		  rasterize_array[num1] = num2 +5;
+		  colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+		  one++;
+      // read next line and print it... but how?
+      }
+	 else if (num2==2)
+      {
+		  rasterize_array[num1] = num2 +5;
+		  //lut->SetTableValue(num1,0.7,1,0,1);
+		  colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,550);
+		  two++;
+      // read next line and print it... but how?
+      }
+	 else if (num2==3)
+      {
+		  rasterize_array[num1] = num2 +5;
+		  //lut->SetTableValue(num1,0.7,0.3,0,1);
+		  colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
+		  three++;
+      // read next line and print it... but how?
+      }
+	 else
+		 cout<< num1 << " " <<num2<<endl;
+	}
+    
+  }
+  //else cout << "Unable to open file"; 
+    cout<<"ONE :" <<one<<endl;
+	cout<<"two :" <<two<<endl;
+	cout<<"three :" <<three<<endl;
+	//lut->Build();
 	cout<<"The values are read successfully predicted by the SVM and the scalar values are set accordinly"<<endl;
 	//--------------------------------------------
- 
+	//ifstream myfile3("E:\SemesterIII\Thesis\libsvm-3.17\windows\Index1.dat");
+	//std::string line3;
+	//int num3;
+ //if (myfile3.is_open())
+  //{
+    //while (! myfile.eof() )
+    //{
+      //getline(myfile3,line3);
+	  //num3 = atoi(line3.c_str());
+		//  rasterize_array[num3] =  6;
+		 // lut->SetTableValue(num1,0,0,1,1);
+		  //one++;
+      // read next line and print it... but how?
+      }
+	// 
+    
+  //}
+  //else cout << "Unable to open file"; 
+    //cout<<"ONE :" <<one<<endl;
+	//cout<<"two :" <<two<<endl;
+	//cout<<"three :" <<three<<endl;
+	//cout<<"The values are read successfully predicted by the SVM and the scalar values are set accordinly"<<endl;
+	//--------------------------------------------
+	//VolVis::renderMainLeft();
 	VolVis::RenderPrediction();		 
+	//myfile.close();
+	//myfile1.close();
  }
-}
+
 
 void VolVis::RenderPrediction()
 {
 	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction =
       vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
   
-
-
      vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
        vtkSmartPointer<vtkVolumeRayCastMapper>::New();
      volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
@@ -935,7 +1107,7 @@ void VolVis::RenderPrediction()
 	//volumeColor->DiscretizeOn();
 	//volumeColor->SetNumberOfValues(3);
 	 volumeColor->AddRGBPoint(0,    0.0, 0.0, 0.0);
-	  volumeColor->AddRGBPoint(150,  1.0, 0, 0);
+	  volumeColor->AddRGBPoint(150,  1, 0, 0);
       volumeColor->AddRGBPoint(550, 0, 1, 0);
 	  volumeColor->AddRGBPoint(1200, 0, 0, 1);
 	 
@@ -992,8 +1164,8 @@ void VolVis::RenderPrediction()
      vtkSmartPointer<vtkVolume>::New();
     volume->SetMapper(volumeMapper);
     volume->SetProperty(volumeProperty);
-    
 	mainRenderer->RemoveAllViewProps();
+	//mainRenderer->Clear();
     // Finally, add the volume to the renderer
     mainRenderer->AddViewProp(volume);
  
@@ -1024,8 +1196,11 @@ void VolVis::RenderPrediction()
     camera->SetFocalPoint(c[0], c[1], c[2]);
     camera->SetPosition(c[0] + 400, c[1], c[2]);
     camera->SetViewUp(0, 0, -1);
-
-     
+  
+    //this->qvtkWidgetMain->GetRenderWindow()->RemoveRenderer(mainRenderer);
+  	//this->qvtkWidgetMain->GetRenderWindow()->AddRenderer(mainRenderer);
+  	//this->qvtkWidgetMain->GetRenderWindow()->Render();
+	//this->qvtkWidgetMain->update(); 
    
   		  
 	this->qvtkWidgetMain->GetRenderWindow()->GetInteractor()->ReInitialize();
@@ -1250,6 +1425,15 @@ void VolVis::renderRight()
 					}}
 }
 
+/*void VolVis::setSliceNumberMainLeft(int a)
+{
+	imageSliceMapperMainLeft->SetSliceNumber(a);
+	this->qvtkWidgetMainCenter->update();
+	//this->qvtkWidgetMain->update();
+	//left_sliceNumber = a;
+	VolVis::renderMainLeft();
+}*/
+
 //*****************************************************************************//
 // Function called when the Left Slider is moved. The slice is been updated    //
 // with the corresponding slice number. A variable is also set to update array //
@@ -1303,7 +1487,7 @@ void VolVis::loadFromFile()
  {
 	 cout<<"Clciked";
      QString fileName = QFileDialog::getOpenFileName(this,
-         tr("Open Address Book"), "",
+         tr("Open the Dataset"), "",
          tr("All Files (*)"));
      if (fileName.isEmpty())
          return;
@@ -1370,4 +1554,7 @@ void VolVis::slotExit()
  imageSliceMapper2= NULL;
  imageSliceMapper3= NULL;
  imageSliceMapperMain = NULL;
+ //imageSliceMapperMainLeft = NULL;
+ //imageSliceMapperMainCenter = NULL;
+
  };

@@ -26,7 +26,11 @@ public:
 	vtkSmartPointer<vtkImageSlice> imageSlice;
 	vtkSmartPointer<vtkImageSlice> imageSlice2;
 	vtkSmartPointer<vtkImageSlice> imageSlice3;
+	//vtkSmartPointer<vtkImageSlice> imageSliceMain;
+	//vtkSmartPointer<vtkImageSlice> imageSliceMainLeft;
+	//vtkSmartPointer<vtkImageSlice> imageSliceMainCenter;
 	vtkSmartPointer<vtkLookupTable> lut;
+	//vtkSmartPointer<vtkLookupTable> lutSupervising;
 	vtkSmartPointer<vtkImageData> colorImagePrediction;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_green;
@@ -66,6 +70,7 @@ public:
 	vtkSmartPointer<vtkRenderer> centerRenderer;
 	vtkSmartPointer<vtkRenderer> rightRenderer;
 	vtkSmartPointer<vtkRenderer> mainRenderer;
+	vtkSmartPointer<vtkRenderer> mainRendererLeft;
 	vtkSmartPointer<vtkImageProperty> imageSlice2prop ;
 	vtkSmartPointer<vtkProperty> actorprop_left_red ;
 	vtkSmartPointer<vtkProperty> actorprop_left_green ;
@@ -103,6 +108,7 @@ public slots:
   void setSliceNumberLeft(int);
   void setSliceNumberCenter(int);
   void setSliceNumberRight(int);
+  //void setSliceNumberMainLeft(int);
   void renderLeft();
   void renderCenter();
   void renderRight();
@@ -120,6 +126,8 @@ public slots:
   void setPredictFile();
   void setIndexFile();
   void updateOpacity();
+  //void renderMainLeft();
+  //void renderMainCenter();
     
 };
 
