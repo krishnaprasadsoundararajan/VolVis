@@ -22,7 +22,8 @@ class VolVis : public QMainWindow, private Ui::VolVis
 {
   Q_OBJECT
 public:
-	
+	vtkSmartPointer<vtkCubeSource> CubeSource;
+    vtkSmartPointer<vtkPolyDataMapper> mapper;
 	vtkSmartPointer<vtkImageSlice> imageSlice;
 	vtkSmartPointer<vtkImageSlice> imageSlice2;
 	vtkSmartPointer<vtkImageSlice> imageSlice3;

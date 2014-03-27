@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Transfer Functions based Direct Volume Rendering</string>
   </property>
   <property name="autoFillBackground">
    <bool>true</bool>
@@ -68,6 +68,9 @@
       <width>160</width>
       <height>19</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string/>
     </property>
     <property name="orientation">
      <enum>Qt::Horizontal</enum>

@@ -215,7 +215,10 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 					       if((x>split)&&(x<(200-split)))
 						   {
 							   //z_cor = (x * z_dim)/(200-(2*split));
-							   z_cor = (x - split) * z_dim / ( 200 - (2*split));
+							   //z_cor = (x - split) * z_dim / ( 200 - (2*split));
+							   z_cor = (x-split)*(z_dim/((z_dim*200)/y_dim));
+							  float temp = float(y_dim)/200;
+							  z_cor = (x-split) * temp;
 							   y_cor = (y_dim*y)/200;
 					           x_cor = center_sliceNumber;
 					           
@@ -303,12 +306,24 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 				else if(z_dim < x_dim)
 				{
 					
+					
+					
+					       
+						  
+							   //z_cor = (x-split)*(z_dim/((z_dim*200)/y_dim));
+							  //float temp = float(y_dim)/200;
+							  //z_cor = (x-split) * temp;
+							  // y_cor = (y_dim*y)/200;
+					          // x_cor = center_sliceNumber;
+							  // ==============================
 					int split = (200-((z_dim*200)/x_dim))/2;
 					//cout<<"SPLIT " <<split<<endl;
 					       if((y>split)&&(y<(200-split)))
 						   {
 							   //z_cor = (x * z_dim)/(200-(2*split));
-							   z_cor = (y - split) * z_dim / ( 200 - (2*split));
+							   //z_cor = (y - split) *(z_dim/((z_dim*200)/y_dim));
+							    float temp = float(x_dim)/200;
+							  z_cor = (y-split) * temp;
 							   x_cor = (x_dim*x)/200;
 					           y_cor = right_sliceNumber;
 					            
@@ -368,7 +383,7 @@ void VolVis::Render()
  
     double spacing[3];
     colorImage->GetSpacing(spacing);
-
+	//colorImage->SetOrigin(64,64,47);
 	
 	//Setting the Dimensions from the image read
 	x_dim = colorImage->GetDimensions()[0], y_dim = colorImage->GetDimensions()[1], z_dim = colorImage->GetDimensions()[2];
@@ -399,7 +414,8 @@ void VolVis::Render()
   //**********************************************************************************//
   imageSliceMapper->SetInputConnection(colorImage->GetProducerPort());
   imageSlice->SetMapper(imageSliceMapper);
-
+  
+    
   imageSliceMapper->SliceFacesCameraOn();
   imageSliceMapper->SetSliceNumber(30);
   leftRenderer->AddActor(imageSlice);
@@ -438,6 +454,7 @@ void VolVis::Render()
   imageSliceMapper2->SetSliceNumber(30);
   imageSlice2->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
   imageSlice2->RotateY(90);
+  //imageSlice2->RotateWXYZ(0,0,90,0);
   imageSliceMapper2->SetOrientationToX();
 
   
@@ -484,8 +501,8 @@ void VolVis::Render()
   imageSliceMapper3->SetSliceNumber(30);
 
   imageSlice3->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
-  imageSlice3->RotateX(-90);
-
+  imageSlice3->RotateX(90);
+  //imageSliceMapper3->SetOrientationToX();
   
   rightRenderer->AddActor(imageSlice3);
   rightRenderer->ResetCamera();
@@ -1152,12 +1169,13 @@ void VolVis::RenderPrediction()
     volumeProperty->SetColor(volumeColor);
     volumeProperty->SetScalarOpacity(volumeScalarOpacity);
     volumeProperty->SetGradientOpacity(volumeGradientOpacity);
-    //volumeProperty->SetInterpolationTypeToLinear();
+    volumeProperty->SetInterpolationTypeToLinear();
 	//volumeProperty->SetInterpolationTypeToNearest();
-    //volumeProperty->ShadeOn();
-    //volumeProperty->SetAmbient(0.4);
-    //volumeProperty->SetDiffuse(0.6);
-    //volumeProperty->SetSpecular(0.2);
+    volumeProperty->ShadeOn();
+    volumeProperty->SetAmbient(0.4);
+    volumeProperty->SetDiffuse(0.6);
+    volumeProperty->SetSpecular(0.2);
+	
     // The vtkVolume is a vtkProp3D (like a vtkActor) and controls the position
     /// and orientation of the volume in world coordinates.
     vtkSmartPointer<vtkVolume> volume =
@@ -1168,7 +1186,6 @@ void VolVis::RenderPrediction()
 	//mainRenderer->Clear();
     // Finally, add the volume to the renderer
     mainRenderer->AddViewProp(volume);
- 
 
 	//vtkSmartPointer<vtkImageMapToColors> firstColorMapper = 
       //vtkSmartPointer<vtkImageMapToColors>::New();
@@ -1218,6 +1235,8 @@ void VolVis::RenderPrediction()
 //**************************************************************************************************************************************//
 void VolVis::renderLeft()
 {
+	CubeSource = vtkSmartPointer<vtkCubeSource>::New();
+	mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 	
   for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
@@ -1225,14 +1244,13 @@ void VolVis::renderLeft()
 			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] != 1)) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
 			  {
 				  rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
-				  vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-				  vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+				  
 				  vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();			  
 				  CubeSource->SetCenter(i,j,k);
-				 
-				  CubeSource->SetXLength(5);
-				  CubeSource->SetYLength(5);
-				  CubeSource->SetZLength(5);
+				  
+				  CubeSource->SetXLength(3);
+				  CubeSource->SetYLength(3);
+				  CubeSource->SetZLength(1);
 				  CubeSource->Update();
 				  mapper->SetInputConnection(CubeSource->GetOutputPort());
 				  actor->SetMapper(mapper);
@@ -1252,12 +1270,13 @@ void VolVis::renderLeft()
 				 actor->SetProperty(actorprop_left_red);
 				 leftRenderer->AddActor(actor);
 			  }
-	this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
-	this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
 
-	this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
-	this->qvtkWidgetLeft->GetRenderWindow()->Render();
+	//this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
+	//this->qvtkWidgetLeft->GetRenderWindow()->Render();
 	this->qvtkWidgetLeft->update();
+	//CubeSource->Delete();
 			  
 }
 
@@ -1272,15 +1291,15 @@ void VolVis::renderCenter()
 	
   int resized_k,resized_j;
   std::vector<vtkSmartPointer<vtkActor> > actors;
-  
+  vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
+  vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
   for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
 			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] != 1))|| (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
 			  {
 				    rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] = 1;
-					vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-					vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+					
 					vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
 					CubeSource->SetXLength(5);
 					CubeSource->SetYLength(5);
@@ -1291,7 +1310,8 @@ void VolVis::renderCenter()
 					}	     
 					else if(z_dim < y_dim)
 					{
-						int split = (200-((z_dim*200)/y_dim));
+						//int split = (200-((z_dim*200)/y_dim));
+						int split = y_dim - z_dim;
 						split/=2;
 						
 						//split = (split * z_dim)/ y_dim;
@@ -1299,7 +1319,8 @@ void VolVis::renderCenter()
 						//x := (c - a) * (z - y) / (b - a) + y
 					    // cout <<" K "<<k<<endl;
 					      // resized_k = (k*(200-(2*split))/z_dim) + split;
-						     resized_k = k+split;
+						     //resized_k = (k*200)/y_dim;
+							 resized_k = k + split;
 						  // cout<<"===========resized_k---------"<<k;
 						   resized_j = (j);
 
@@ -1310,7 +1331,10 @@ void VolVis::renderCenter()
 					resized_j = ((j+split) * (z_dim - split))/(y_dim + split);
 					resized_k =k;       
 				}*///cout<<"CUBE :"<<resized_k<<" "<<resized_j<<" "<<i<<endl;
-					CubeSource->SetCenter(resized_k,resized_j,110-i);
+					int split = (200-((z_dim*200)/y_dim))/2;
+					if((resized_k<split) || (resized_k > (200-split)))
+						cout<<" K : "<<k<<endl;
+					CubeSource->SetCenter(resized_k,resized_j,128-i);
 					CubeSource->Update();
 					mapper->SetInputConnection(CubeSource->GetOutputPort());
 					actor->SetMapper(mapper);
@@ -1335,6 +1359,7 @@ void VolVis::renderCenter()
 	this->qvtkWidgetCenter->GetRenderWindow()->AddRenderer(centerRenderer);
 	this->qvtkWidgetCenter->GetRenderWindow()->Render();
 	this->qvtkWidgetCenter->update();
+	//CubeSource->Delete();
 	}
 
 }
@@ -1344,6 +1369,8 @@ void VolVis::renderCenter()
 //**************************************************************************************************************************************//
 void VolVis::renderRight()
 {
+	vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
+	vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
   int resized_i,resized_k;	
   for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
@@ -1354,8 +1381,7 @@ void VolVis::renderRight()
 				    if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] !=0)
 					{
 						rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
-						vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-					    vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
+						
 					    vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
 						CubeSource->SetXLength(5);
 						CubeSource->SetYLength(5);
@@ -1367,15 +1393,30 @@ void VolVis::renderRight()
 							}	     
 						else if(z_dim < x_dim)
 							{
-								int split = (200-((z_dim*200)/x_dim));
-								split/=2;
+								//int split = (200-((z_dim*200)/x_dim));
+								//split/=2;
 						
 						//split = (split * z_dim)/ y_dim;
 						//split = y_dim - (split);
 						//x := (c - a) * (z - y) / (b - a) + y
 					    // cout <<" K "<<k<<endl;
 					      // resized_k = (k*(200-(2*split))/z_dim) + split;
-						     resized_k = k + split;
+						     //resized_k = k + split;
+						  // cout<<"===========resized_k---------"<<k;
+						   //resized_i = (i);
+
+						   //===============
+						   //int split = (200-((z_dim*200)/y_dim));
+						int split = y_dim - z_dim;
+						split/=2;
+						
+						//split = (split * z_dim)/ y_dim;
+						//split = y_dim - (split);
+						//x := (c - a) * (z - y) / (b - a) + y
+					    // cout <<" K "<<k<<endl;
+					      // resized_k = (k*(200-(2*split))/z_dim) + split;
+						     //resized_k = (k*200)/y_dim;
+							 resized_k = k + split;
 						  // cout<<"===========resized_k---------"<<k;
 						   resized_i = (i);
 
@@ -1456,6 +1497,7 @@ void VolVis::setSliceNumberCenter(int a)
 	imageSliceMapper2->SetSliceNumber(a);
 	this->qvtkWidgetCenter->update();
 	center_sliceNumber = a;
+	cout<<a<<endl;
 
 }
 
@@ -1530,7 +1572,7 @@ void VolVis::updateOpacity()
 	opacityBlue=this->doubleSpinBoxBlue->value();
 	opacityRed = this->doubleSpinBoxRed->value();
 	opacityGreen = this->doubleSpinBoxGreen->value();
-	VolVis::renderMain();
+	VolVis::RenderPrediction();
 }
 
 
