@@ -370,7 +370,7 @@ void VolVis::Render()
 	source->Update();
 	
 	
-	vtkSmartPointer<vtkImageData> colorImage;
+	vtkSmartPointer<vtkImageData> colorImage = vtkSmartPointer<vtkImageData>::New();
 	colorImage = source->GetOutput();
 	colorImage->UpdateInformation();
 	
@@ -583,8 +583,8 @@ VolVis::VolVis()
     renderWindow = vtkSmartPointer<vtkRenderWindow>::New();
     renderWindow->SetSize(800, 600);
 	
-	renderWindow->FullScreenOn();
-	renderWindow->Render();
+	//renderWindow->FullScreenOn();
+	//renderWindow->Render();
 	//renderWindow->SetWindowName("Transfer Function based Direct Volume Rendering - Dr.Thomas Schultz, Krishna Prasad Soundararajan");
 
 	//loadFileName = "I:\assignment-06-octree-solution (1)\assignment-06-octree-solution\headsq-half.vti";
@@ -895,6 +895,7 @@ void VolVis::renderMain()
 	
 	source->Update();
 	//PTR<vtkImageData>
+	colorImagePrediction = vtkSmartPointer<vtkImageData>::New();
 	//vtkSmartPointer<vtkImageData> colorImage;
 	colorImagePrediction = source->GetOutput();
 	colorImagePrediction->UpdateInformation();
@@ -1248,8 +1249,8 @@ void VolVis::renderLeft()
 				  vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();			  
 				  CubeSource->SetCenter(i,j,k);
 				  
-				  CubeSource->SetXLength(3);
-				  CubeSource->SetYLength(3);
+				  CubeSource->SetXLength(5);
+				  CubeSource->SetYLength(5);
 				  CubeSource->SetZLength(1);
 				  CubeSource->Update();
 				  mapper->SetInputConnection(CubeSource->GetOutputPort());
