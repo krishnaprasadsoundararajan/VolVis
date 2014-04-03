@@ -1023,8 +1023,8 @@ void VolVis::renderMain()
 //lut->Build();
 int num1,num2;
 std::string line,line1;
-ifstream myfile (predictionFileName);
-ifstream myfile1(indexFileName);
+ifstream myfile (predictionFileName.c_str());
+ifstream myfile1(indexFileName.c_str());
  if (myfile.is_open())
   {
     while (! myfile.eof() )
