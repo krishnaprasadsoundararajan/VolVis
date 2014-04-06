@@ -33,6 +33,7 @@ public:
 	vtkSmartPointer<vtkLookupTable> lut;
 	//vtkSmartPointer<vtkLookupTable> lutSupervising;
 	vtkSmartPointer<vtkImageData> colorImagePrediction;
+	vtkSmartPointer<vtkImageData> colorImagePrediction_randomForest;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_green;
 	vtkSmartPointer<vtkPolyData> linesPolyData_left_blue;
@@ -71,6 +72,7 @@ public:
 	vtkSmartPointer<vtkRenderer> centerRenderer;
 	vtkSmartPointer<vtkRenderer> rightRenderer;
 	vtkSmartPointer<vtkRenderer> mainRenderer;
+	vtkSmartPointer<vtkRenderer> mainRenderer_randomForest;
 	vtkSmartPointer<vtkRenderer> mainRendererLeft;
 	vtkSmartPointer<vtkImageProperty> imageSlice2prop ;
 	vtkSmartPointer<vtkProperty> actorprop_left_red ;
@@ -84,7 +86,7 @@ public:
 	vtkSmartPointer<vtkProperty> actorprop_right_blue;
 	vtkSmartPointer<vtkRenderWindow> renderWindow;
 	//vtkSmartPointer<vtkProperty> actorprop_main_window;
-	std::string loadFileName, predictionFileName, indexFileName;
+	std::string loadFileName, predictionFileName,predictionFile_randomForest, indexFileName;
 	double opacityRed,opacityGreen,opacityBlue;
 	int extent[6];
 
@@ -114,6 +116,7 @@ public slots:
   void renderCenter();
   void renderRight();
   void renderMain();
+  void renderMainRandomForest();
   //void clearleft();
   //void clearcenter();
   //void clearright();
@@ -125,6 +128,7 @@ public slots:
   void updateImageArrayafterTraining();
   void loadFromFile();
   void setPredictFile();
+  void setPredictFileRandomForest();
   void setIndexFile();
   void updateOpacity();
   //void renderMainLeft();

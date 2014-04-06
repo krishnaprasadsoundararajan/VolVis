@@ -49,6 +49,8 @@
 #include<vtkDataArray.h>
 #include <vtkPointData.h> // Added to access the instensity colorImage1->GetPointData()-> ....
 #include <QtGui>
+#include <qdesktopservices.h>
+#include <qurl.h>
 
 
 #define PTR vtkSmartPointer
@@ -602,11 +604,18 @@ VolVis::VolVis()
     fileMenu->addAction(loadFile);
 	
 	QAction *predictFile;
-	predictFile = new QAction(tr("&Load Prediction File"), this);
+	predictFile = new QAction(tr("&Load SVM Prediction File"), this);
     predictFile->setShortcuts(QKeySequence::New);
     predictFile->setStatusTip(tr("Load the file for prediction"));
     connect(predictFile, SIGNAL(triggered()), this, SLOT(setPredictFile()));
     fileMenu->addAction(predictFile);
+
+	QAction *predictFile_randomForest;
+	predictFile_randomForest = new QAction(tr("&Load Random Forest Prediction File"), this);
+    predictFile_randomForest->setShortcuts(QKeySequence::New);
+    predictFile_randomForest->setStatusTip(tr("Load the file for prediction"));
+    connect(predictFile_randomForest, SIGNAL(triggered()), this, SLOT(setPredictFileRandomForest()));
+    fileMenu->addAction(predictFile_randomForest);
 
 	QAction *indexFile;
 	indexFile = new QAction(tr("&Load Index File"), this);
@@ -647,7 +656,8 @@ VolVis::VolVis()
 
    mainRenderer = vtkSmartPointer<vtkRenderer>::New();
    mainRenderer->SetBackground(.6, .5, .4);    
- 
+   mainRenderer_randomForest = vtkSmartPointer<vtkRenderer>::New();
+   mainRenderer->SetBackground(.6, .5, .4); 
    
    this->pushButtonBlue->setAutoFillBackground(true);	
 	this->pushButtonRed->setAutoFillBackground(true);
@@ -879,11 +889,11 @@ void VolVis::trainSVM()
 
 void VolVis::renderMain()
 {
-	if(indexFileName.empty() || predictionFileName.empty() || loadFileName.empty())
+	if(indexFileName.empty() || predictionFileName.empty() || loadFileName.empty() || predictionFile_randomForest.empty())
 	{
-		cout<<"inside if"<<endl;
+	
 		QMessageBox msgBox;
-		msgBox.setText("Please Load Prediction,Index and Training File");
+		msgBox.setText("Please Load 2 Prediction Files,Index and Training File");
 		msgBox.exec();
 
 	}
@@ -896,9 +906,12 @@ void VolVis::renderMain()
 	source->Update();
 	//PTR<vtkImageData>
 	colorImagePrediction = vtkSmartPointer<vtkImageData>::New();
+	colorImagePrediction_randomForest = vtkSmartPointer<vtkImageData>::New();
 	//vtkSmartPointer<vtkImageData> colorImage;
 	colorImagePrediction = source->GetOutput();
 	colorImagePrediction->UpdateInformation();
+	colorImagePrediction_randomForest = source->GetOutput();
+	colorImagePrediction_randomForest->UpdateInformation();
 	int one=0,two=0,three =0;
 	//lut = vtkSmartPointer<vtkLookupTable>::New();
   //int tableSize = std::max(resolution*resolution + 1, 10);
@@ -1021,8 +1034,8 @@ void VolVis::renderMain()
 		//  for( int k =0 ;k< z_dim;k++)
 			//  lut->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),0,0,0,1);
 //lut->Build();
-int num1,num2;
-std::string line,line1;
+int num1,num2,randomForest_num;
+std::string line,line1,randomForest_line;
 ifstream myfile (predictionFileName.c_str());
 ifstream myfile1(indexFileName.c_str());
  if (myfile.is_open())
@@ -1032,7 +1045,7 @@ ifstream myfile1(indexFileName.c_str());
       getline(myfile,line);
 	  getline(myfile1,line1);
 	  num1 = atoi(line1.c_str());
-		  num2 = atoi(line.c_str());
+	  num2 = atoi(line.c_str());
 		int prod = x_dim*y_dim;
 		int x1 = num1 % x_dim;
 		int y1 = (num1% prod) / x_dim;
@@ -1062,8 +1075,9 @@ ifstream myfile1(indexFileName.c_str());
 		  three++;
       // read next line and print it... but how?
       }
-	 else
-		 cout<< num1 << " " <<num2<<endl;
+	 
+	 
+
 	}
     
   }
@@ -1098,21 +1112,93 @@ ifstream myfile1(indexFileName.c_str());
 	//cout<<"The values are read successfully predicted by the SVM and the scalar values are set accordinly"<<endl;
 	//--------------------------------------------
 	//VolVis::renderMainLeft();
-	VolVis::RenderPrediction();		 
+	//VolVis::RenderPrediction();		 
 	//myfile.close();
 	//myfile1.close();
  }
 
+ void VolVis::renderMainRandomForest()
+{
+	if(indexFileName.empty() || predictionFileName.empty() || loadFileName.empty() || predictionFile_randomForest.empty())
+	{
+	
+		QMessageBox msgBox;
+		msgBox.setText("Please Load 2 Prediction Files,Index and Training File");
+		msgBox.exec();
+
+	}
+	else
+	{
+	cout<<"Button Pressed"<<endl;
+	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
+	source->SetFileName(loadFileName.c_str());
+	
+	source->Update();
+	
+	colorImagePrediction_randomForest = vtkSmartPointer<vtkImageData>::New();
+	colorImagePrediction_randomForest = source->GetOutput();
+	colorImagePrediction_randomForest->UpdateInformation();
+	int one=0,two=0,three =0;
+	cout<<"called============";
+ 
+int index_num,randomForest_num;
+std::string index_line,randomForest_line;
+ifstream randomForest_file (predictionFile_randomForest.c_str());
+ifstream index_file (indexFileName.c_str());
+ if (randomForest_file.is_open())
+  {
+    while (! randomForest_file.eof() )
+    {
+      getline(index_file,index_line);
+	  getline(randomForest_file,randomForest_line);
+	  
+	  randomForest_num = atoi(randomForest_line.c_str());
+	  index_num = atoi(index_line.c_str());
+		int prod = x_dim*y_dim;
+		int x1 = index_num % x_dim;
+		int y1 = (index_num% prod) / x_dim;
+		int z1 = index_num /prod;
+	 // cout<<atoi(line.c_str())<<" "<<atoi(line1.c_str())<<endl;
+     if (randomForest_num==1)
+      {
+		  colorImagePrediction_randomForest->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+		  one++;
+      }
+	 else if (randomForest_num==2)
+      {
+		  colorImagePrediction_randomForest->SetScalarComponentFromDouble(x1,y1,z1,0,550);
+		  two++;
+      }
+	 else if (randomForest_num==3)
+      {
+		  colorImagePrediction_randomForest->SetScalarComponentFromDouble(x1,y1,z1,0,1200);
+		  three++;
+      }
+	 
+      }
+ }    
+	VolVis::RenderPrediction();		 
+ }
+
+ }
 
 void VolVis::RenderPrediction()
 {
 	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction =
+      vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
+
+	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction_randomForest =
       vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
   
      vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
        vtkSmartPointer<vtkVolumeRayCastMapper>::New();
      volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
      volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
+
+	 vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper_randomForest =
+       vtkSmartPointer<vtkVolumeRayCastMapper>::New();
+     volumeMapper_randomForest->SetInputConnection(colorImagePrediction_randomForest->GetProducerPort());
+     volumeMapper_randomForest->SetVolumeRayCastFunction(rayCastFunction_randomForest);
 	 
     // The color transfer function maps voxel intensities to colors.
     // It is modality-specific, and often anatomy-specific as well.
@@ -1188,6 +1274,18 @@ void VolVis::RenderPrediction()
     // Finally, add the volume to the renderer
     mainRenderer->AddViewProp(volume);
 
+
+	vtkSmartPointer<vtkVolume> volume_randomForest =
+     vtkSmartPointer<vtkVolume>::New();
+    volume_randomForest->SetMapper(volumeMapper_randomForest);
+    volume_randomForest->SetProperty(volumeProperty);
+	mainRenderer_randomForest->RemoveAllViewProps();
+	//mainRenderer->Clear();
+	
+    // Finally, add the volume to the renderer
+    mainRenderer_randomForest->AddViewProp(volume_randomForest);
+
+
 	//vtkSmartPointer<vtkImageMapToColors> firstColorMapper = 
       //vtkSmartPointer<vtkImageMapToColors>::New();
 	//firstColorMapper->SetInputConnection( colorImage->GetProducerPort() );
@@ -1214,7 +1312,13 @@ void VolVis::RenderPrediction()
     camera->SetFocalPoint(c[0], c[1], c[2]);
     camera->SetPosition(c[0] + 400, c[1], c[2]);
     camera->SetViewUp(0, 0, -1);
-  
+    mainRenderer_randomForest->SetActiveCamera(camera);
+	/*vtkCamera *camera_randomForest = mainRenderer_randomForest->GetActiveCamera();
+    double *c_randomForest = volume_randomForest->GetCenter();
+    camera_randomForest->SetFocalPoint(c_randomForest[0], c_randomForest[1], c_randomForest[2]);
+    camera_randomForest->SetPosition(c_randomForest[0] + 400, c_randomForest[1], c_randomForest[2]);
+    camera_randomForest->SetViewUp(0, 0, -1);
+    */
     //this->qvtkWidgetMain->GetRenderWindow()->RemoveRenderer(mainRenderer);
   	//this->qvtkWidgetMain->GetRenderWindow()->AddRenderer(mainRenderer);
   	//this->qvtkWidgetMain->GetRenderWindow()->Render();
@@ -1226,7 +1330,15 @@ void VolVis::RenderPrediction()
 
 	this->qvtkWidgetMain->GetRenderWindow()->AddRenderer(mainRenderer);
 	this->qvtkWidgetMain->GetRenderWindow()->Render();
-	this->qvtkWidgetMain->update();	
+	this->qvtkWidgetMain->update();
+
+
+	this->qvtkWidgetMain_2->GetRenderWindow()->GetInteractor()->ReInitialize();
+	this->qvtkWidgetMain_2->GetRenderWindow()->GetInteractor()->Render();
+
+	this->qvtkWidgetMain_2->GetRenderWindow()->AddRenderer(mainRenderer_randomForest);
+	this->qvtkWidgetMain_2->GetRenderWindow()->Render();
+	this->qvtkWidgetMain_2->update();
  
  cout<<endl<<"The Volume is rendered!!!!"<<endl;
 }
@@ -1523,7 +1635,45 @@ void VolVis::setSliceNumberRight(int a)
 void VolVis::updateImageArrayafterTraining()
 {
 	cout<<"called============";
+	/*system("E:/SemesterIII/Thesis/VolVis_build/ScaleTrainingData.bat");
+	system("E:/SemesterIII/Thesis/VolVis_build/ScaleTestingData.bat");
+	std::clock_t start = std::clock();
+	system("E:/SemesterIII/Thesis/VolVis_build/SVM-train_batch.bat");
+	std::clock_t end = std::clock();
+	float gap = float((end-start));
+	QString timeDifference = QString::number(gap);
+	this->SVMTrainingTime->setText(timeDifference);
+	this->SVMTrainingTime->update();
+	start = std::clock();
+	system("E:/SemesterIII/Thesis/VolVis_build/SVM-predict-batch.bat");
+	end = std::clock();
+	gap = float((end-start));
+	timeDifference = QString::number(gap);
+	this->SVMPredictionTime->setText(timeDifference);
+	this->SVMPredictionTime->update();
+	system("E:/SemesterIII/Thesis/VolVis_build/python_script.bat");*/
+	std::string line;
+	ifstream myfile ("E:/SemesterIII/Thesis/VolVis_build/testTime_randomForest.dat");
+  if (myfile.is_open())
+  {
+    while ( getline (myfile,line) )
+    {
+      cout << line << '\n';
+    }
+    myfile.close();
+  }
+
+  else cout << "Unable to open file"; 
+	cout<<"training"<<line<<endl;
+	this->RandomForestTrainingTime->setText(QString::fromStdString(line));
+	ifstream myfile1 ("E:/SemesterIII/Thesis/VolVis_build/predictTime_randomForest.dat");
+	getline(myfile1,line);
+	cout<<"prediciton:"<<line<<endl;
+	this->RandomForestPredictionTime->setText(QString::fromStdString(line));
+	
+	//QDesktopServices::openUrl(QUrl("file:///"+QString::fromStdString(filename2),QUrl::TolerantMode));
 	VolVis::renderMain();
+	VolVis::renderMainRandomForest();
 }
 
 void VolVis::loadFromFile()
@@ -1551,6 +1701,18 @@ void VolVis::setPredictFile()
          return;
      else {
 		 predictionFileName = fileName.toUtf8().constData();
+          }
+ }
+void VolVis::setPredictFileRandomForest()
+ {
+	 
+     QString fileName = QFileDialog::getOpenFileName(this,
+         tr("Set the Random Forest Prediction File"), "",
+         tr(";All Files (*)"));
+     if (fileName.isEmpty())
+         return;
+     else {
+		 predictionFile_randomForest = fileName.toUtf8().constData();
           }
 	 }
 
