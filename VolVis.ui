@@ -10,6 +10,9 @@
     <height>772</height>
    </rect>
   </property>
+  <property name="cursor">
+   <cursorShape>ArrowCursor</cursorShape>
+  </property>
   <property name="windowTitle">
    <string>Transfer Functions based Direct Volume Rendering</string>
   </property>
@@ -142,7 +145,7 @@
     <property name="geometry">
      <rect>
       <x>820</x>
-      <y>110</y>
+      <y>220</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -248,7 +251,7 @@
     <property name="geometry">
      <rect>
       <x>720</x>
-      <y>110</y>
+      <y>220</y>
       <width>91</width>
       <height>23</height>
      </rect>
@@ -305,6 +308,16 @@
       <width>601</width>
       <height>371</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>8</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>WaitCursor</cursorShape>
     </property>
    </widget>
    <widget class="QVTKWidget" name="qvtkWidgetMain" native="true">
@@ -447,6 +460,201 @@
     </property>
     <property name="text">
      <string>Random Forest Classifier Evaluated Visualization</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonOrange">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>110</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonYellow">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>140</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButtonPurple">
+    <property name="geometry">
+     <rect>
+      <x>820</x>
+      <y>170</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Perpetua</family>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBoxOrange">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>110</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBoxYellow">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>140</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="doubleSpinBoxPurple">
+    <property name="geometry">
+     <rect>
+      <x>730</x>
+      <y>170</y>
+      <width>81</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="maximum">
+     <double>1.000000000000000</double>
+    </property>
+    <property name="singleStep">
+     <double>0.100000000000000</double>
+    </property>
+    <property name="value">
+     <double>0.500000000000000</double>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>1120</x>
+      <y>160</y>
+      <width>71</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SVM Accuracy</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>1070</x>
+      <y>190</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Random Forest Accuracy</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="SVM_accuracy">
+    <property name="geometry">
+     <rect>
+      <x>1200</x>
+      <y>160</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>WaitCursor</cursorShape>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="RandomForest_accuracy">
+    <property name="geometry">
+     <rect>
+      <x>1200</x>
+      <y>190</y>
+      <width>113</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="cursor">
+     <cursorShape>WaitCursor</cursorShape>
     </property>
    </widget>
   </widget>

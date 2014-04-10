@@ -13,6 +13,9 @@
 #include <QMainWindow>
 #include <vtkImageData.h>
 #include <vtkCubeSource.h>
+#include <vtkVolumeRayCastCompositeFunction.h>
+#include <vtkColorTransferFunction.h>
+#include <vtkPiecewiseFunction.h>
 //#include <QPushButton>
 
 
@@ -25,11 +28,13 @@ public:
 	vtkSmartPointer<vtkCubeSource> CubeSource;
     vtkSmartPointer<vtkPolyDataMapper> mapper;
 	vtkSmartPointer<vtkImageSlice> imageSlice;
+	vtkSmartPointer<vtkImageSlice> imageSliceColor;
 	vtkSmartPointer<vtkImageSlice> imageSlice2;
 	vtkSmartPointer<vtkImageSlice> imageSlice3;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMain;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMainLeft;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMainCenter;
+	vtkSmartPointer<vtkLookupTable> lut123 ;
 	vtkSmartPointer<vtkLookupTable> lut;
 	//vtkSmartPointer<vtkLookupTable> lutSupervising;
 	vtkSmartPointer<vtkImageData> colorImagePrediction;
@@ -43,6 +48,14 @@ public:
     vtkSmartPointer<vtkPolyData> linesPolyData_right_red;
 	vtkSmartPointer<vtkPolyData> linesPolyData_right_green;
 	vtkSmartPointer<vtkPolyData> linesPolyData_right_blue;
+
+	vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction_randomForest1;
+	vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper_randomForest1;
+	 vtkSmartPointer<vtkColorTransferFunction> volumeColor1;
+	 vtkSmartPointer<vtkPiecewiseFunction> volumeScalarOpacity1;
+	 vtkSmartPointer<vtkPiecewiseFunction> volumeGradientOpacity1;
+	 vtkSmartPointer<vtkVolumeProperty> volumeProperty1;
+	 vtkSmartPointer<vtkVolume> volume_randomForest1;
 	
 	vtkSmartPointer<vtkPolyDataMapper> mapper_left_red;
     vtkSmartPointer<vtkActor> actor_left_red;
@@ -87,7 +100,7 @@ public:
 	vtkSmartPointer<vtkRenderWindow> renderWindow;
 	//vtkSmartPointer<vtkProperty> actorprop_main_window;
 	std::string loadFileName, predictionFileName,predictionFile_randomForest, indexFileName;
-	double opacityRed,opacityGreen,opacityBlue;
+	double opacityRed,opacityGreen,opacityBlue,opacityPurple,opacityOrange,opacityYellow;
 	int extent[6];
 
   // Constructor/Destructor
@@ -123,6 +136,9 @@ public slots:
   void renderGreenColor();
   void renderBlueColor();
   void renderRedColor();
+  void renderOrangeColor();
+  void renderYellowColor();
+  void renderPurpleColor();
   void renderEraser();
   void trainSVM();
   void updateImageArrayafterTraining();

@@ -40,11 +40,13 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 	//Instead of using ofstream using FILE* reduces the time for writing the file by almost 50%
 	
 
-	FILE *outputFileTest,*outputFileTrain,*outputFileIndex,*outputFileIndex1;
-	outputFileTest = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Test.dat","w");
-	outputFileTrain = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Train.dat","w");
-	outputFileIndex = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index.dat","w");
-	outputFileIndex1 = fopen("E:/SemesterIII/Thesis/libsvm-3.17/windows/Index1.dat","w");
+	FILE *outputFileTest,*outputFileTrain,*outputFileTrainValue,*outputFileIndex,*outputFileIndex1,*timeFile;
+	outputFileTest = fopen("E:/SemesterIII/Thesis/VolVis_build/Test.dat","w");
+	outputFileTrain = fopen("E:/SemesterIII/Thesis/VolVis_build/Train.dat","w");
+	outputFileTrainValue = fopen("E:/SemesterIII/Thesis/VolVis_build/TrainValue.dat","w");
+	outputFileIndex = fopen("E:/SemesterIII/Thesis/VolVis_build/Index.dat","w");
+	outputFileIndex1 = fopen("E:/SemesterIII/Thesis/VolVis_build/Index1.dat","w");
+	timeFile = fopen("E:/SemesterIII/Thesis/VolVis_build/timeFile.dat","w");
 
 	cout<<"File created";
 	//cout<<"inside test train data "<<g[10]<<endl;
@@ -77,14 +79,17 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 					//cout<<rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)];
 					if((rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]!=0))// || ((x+(y*x_dim)+(z*x_dim*y_dim))%1000 == 0))
 						{
+							fprintf(outputFileTrainValue,"%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]);
 							//cout<<"x+(y*x_dim)+(z*x_dim*y_dim)"<< x+(y*x_dim)+(z*x_dim*y_dim);
 							//ssTrain<<rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]<<" "<<"1:"<<colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim))<<" 2:"<<g[0]<<" 3:" <<g[1]<<" 4:"<<g[2]<<" 5:"<<gradient_magnitude<<endl;
 				        	//ssIndex1<<x+(y*(extent[1] - extent[0]))+(z*(extent[1] - extent[0])*(extent[3] - extent[2]))<<endl;
 					        fprintf(outputFileTrain,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradient_magnitude,colorImage1->GetPointData()->GetScalars()->GetTuple1(x+(y*x_dim)+(z*x_dim*y_dim)),x,y,z);
 					two1++;
 							fprintf(outputFileIndex1,"%d\n",x+(y*x_dim)+(z*x_dim*y_dim));
+
+							
 					   }
-					else
+					
 					{
 						//cout<<"writing test"<<
 						
@@ -118,7 +123,30 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 		  fclose(outputFileTrain);
 		  fclose(outputFileIndex);
 		  fclose(outputFileIndex1);
+		  fclose(outputFileTrainValue);
 		  cout<<"============================COMPLETED===================================================";
+		  system("E:/SemesterIII/Thesis/VolVis_build/ScaleTrainingData.bat");
+		  system("E:/SemesterIII/Thesis/VolVis_build/ScaleTestingData.bat");
+		  std::clock_t start = std::clock();
+		  system("E:/SemesterIII/Thesis/VolVis_build/SVM-train_batch.bat");
+	      end = std::clock();
+	      float gap = float((end-start));
+		  fprintf(timeFile,"%f\n",gap);
+		  
+		  start = std::clock();
+		  system("E:/SemesterIII/Thesis/VolVis_build/SVM-predict-batch.bat");
+	      end = std::clock();
+	      gap = float((end-start));
+		  fprintf(timeFile,"%f\n",gap);
+		  
+		  start = std::clock();
+		  system("E:/SemesterIII/Thesis/VolVis_build/python_script.bat");
+	      end = std::clock();
+	      gap = float((end-start));
+		  fprintf(timeFile,"%d\n",gap);
+		  fclose(timeFile);
+
+  
 }
 void FeatureVector::updateRasterizeArrayafterTraining(int (*rasterize_array))
 {
