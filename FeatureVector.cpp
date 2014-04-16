@@ -125,7 +125,7 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 		  fclose(outputFileIndex1);
 		  fclose(outputFileTrainValue);
 		  cout<<"============================COMPLETED===================================================";
-		  system("E:/SemesterIII/Thesis/VolVis_build/ScaleTrainingData.bat");
+		  /*system("E:/SemesterIII/Thesis/VolVis_build/ScaleTrainingData.bat");
 		  system("E:/SemesterIII/Thesis/VolVis_build/ScaleTestingData.bat");
 		  std::clock_t start = std::clock();
 		  system("E:/SemesterIII/Thesis/VolVis_build/SVM-train_batch.bat");
@@ -145,7 +145,7 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 	      gap = float((end-start));
 		  fprintf(timeFile,"%d\n",gap);
 		  fclose(timeFile);
-
+		  */
   
 }
 void FeatureVector::updateRasterizeArrayafterTraining(int (*rasterize_array))

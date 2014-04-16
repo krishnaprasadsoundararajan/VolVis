@@ -64,7 +64,9 @@
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapperColor = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper2 = vtkSmartPointer<vtkImageSliceMapper>::New();
+ vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper2Color = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper3 = vtkSmartPointer<vtkImageSliceMapper>::New();
+ vtkSmartPointer<vtkImageSliceMapper> imageSliceMapper3Color = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageSliceMapper> imageSliceMapperMain = vtkSmartPointer<vtkImageSliceMapper>::New();
  //vtkSmartPointer<vtkImageSliceMapper> imageSliceMapperMainLeft = vtkSmartPointer<vtkImageSliceMapper>::New();
  vtkSmartPointer<vtkImageData> drawing;
@@ -84,6 +86,7 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 		{
 			right_button_down = 1;
 			this->StartWindowLevel();
+		
 		}
 	//On Releasing the right mouse button deactivates the WindowLevel changes on mouse move
 	virtual void OnRightButtonUp()
@@ -100,7 +103,7 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 
     virtual void OnLeftButtonDown() 
     {	
-		
+		this->EndWindowLevel();
 		left_button_down = 1;
 		vtkInteractorStyleImage::OnLeftButtonDown();
 		int x = this->Interactor->GetEventPosition()[0];
@@ -110,7 +113,7 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
      
 	 virtual void OnMouseMove()
 	 {
-		
+		this->EndWindowLevel();
 		 vtkInteractorStyleImage::OnMouseMove();
 		 int x = this->Interactor->GetEventPosition()[0];
          int y = this->Interactor->GetEventPosition()[1];
@@ -118,13 +121,14 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 		 int x_cor,y_cor,z_cor;
 		 
 		if(left_button_down==1)
-			{
+			{ 
+				int i,j,k;
 				this->EndWindowLevel();
 				if(x_dim == y_dim)
 				{
-					      x_cor = (x_dim*x)/200;
-				          y_cor = (y_dim*y)/200;
-						  z_cor = left_sliceNumber;
+					      i=x_cor = (x_dim*x)/200;
+				          j=y_cor = (y_dim*y)/200;
+						  k=z_cor = left_sliceNumber;
 				}	     
 				else if(x_dim < y_dim)
 				{
@@ -137,49 +141,85 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 				if(Color[0] == 255)//Red Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,150);
+						for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
+				 		}
+						
 				}
 				else if(Color[1] == 255)// Green Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,550);
+				for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
+				 		}
 				}
 				else if(Color[2] == 255)// Blue Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,1200);
+				    
+			
+for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
+				 		}			 
 				}
 				else if(Color[1] == 69)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
 					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,1400);
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,154);
+				 		}
 				}
 				else if(Color[0] == 254)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,1500);
+				 for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
+				 		}
+					
 				}
 				else if(Color[0] == 128)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
 					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =x_cor;j<(x_cor+5);j++)
-					drawing->SetScalarComponentFromDouble(i,j,z_cor,0,1600);
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
+				 		}
 				}
 				//Eraser button pressed and checks if the voxel is already colored. Need not erase when not drawn before.
-				else if((Color[0] == 333) && (rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] ==1 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==2 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==3 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==4 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==5 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==6))
-					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 7;
-
+				else if(Color[0] == 333) 
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+				 		}
+				}
 				
              }
 		 
@@ -251,31 +291,100 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 					
 					int split = (200-((z_dim*200)/y_dim))/2;
 					//cout<<"SPLIT " <<split<<endl;
-					       if((x>split)&&(x<(200-split)))
+					       if((x>(split+5))&&(x<(200-split-5)))
 						   {
 							   //z_cor = (x * z_dim)/(200-(2*split));
 							   //z_cor = (x - split) * z_dim / ( 200 - (2*split));
 							   z_cor = (x-split)*(z_dim/((z_dim*200)/y_dim));
 							  float temp = float(y_dim)/200;
-							  z_cor = (x-split) * temp;
+							   z_cor = (x-split) * temp;
 							   y_cor = (y_dim*y)/200;
-					           x_cor = center_sliceNumber;
+					          int k = x_cor = center_sliceNumber;
 					           
-							   if(Color[0] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;
-							   else if(Color[1] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-							   else if(Color[2] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
-							   else if(Color[1] == 69)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
-							   else if(Color[0] == 254)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-							   else if(Color[0] == 128)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
-							   else if((Color[0] == 333) && (rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==1 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==2 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==3 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==4 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==5 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==6))
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 7;
-							  // cout<<"CENTER Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
+							   if(Color[0] == 255)//Red Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
+						for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
+				 		}
+						
+				}
+				else if(Color[1] == 255)// Green Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
+				for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
+				 		}
+				}
+				else if(Color[2] == 255)// Blue Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
+				    
+			
+for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
+				 		}			 
+				}
+				else if(Color[1] == 69)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,164);
+				 		}
+				}
+				else if(Color[0] == 254)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
+				 for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
+				 		}
+					
+				}
+				else if(Color[0] == 128)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
+				 		}
+				}
+				//Eraser button pressed and checks if the voxel is already colored. Need not erase when not drawn before.
+				else if(Color[0] == 333) 
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+				 		}
+				}
+				
+             
 						   }
 				}
 				else if(y_dim < z_dim)
@@ -372,22 +481,89 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 							   x_cor = (x_dim*x)/200;
 					           y_cor = right_sliceNumber;
 					            
-							   if(Color[0] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;
-							   else if(Color[1] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-							   else if(Color[2] == 255)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
-							    else if(Color[1] == 69)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
-							   else if(Color[0] == 254)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-							   else if(Color[0] == 128)
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
-							   else if((Color[0] == 333) && (rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==1 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==2 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==3 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==4 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==5 || rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]==6))
-									rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 7;
-							  
-							   //cout<<"RIGHT Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
+							    if(Color[0] == 255)//Red Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
+						for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
+				 		}
+						
+				}
+				else if(Color[1] == 255)// Green Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
+				for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
+				 		}
+				}
+				else if(Color[2] == 255)// Blue Color button pressed
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
+				    
+			
+for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
+				 		}			 
+				}
+				else if(Color[1] == 69)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,164);
+				 		}
+				}
+				else if(Color[0] == 254)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
+				 for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
+				 		}
+					
+				}
+				else if(Color[0] == 128)
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
+				 		}
+				}
+				//Eraser button pressed and checks if the voxel is already colored. Need not erase when not drawn before.
+				else if(Color[0] == 333) 
+				{
+					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
+					for(int i =x_cor;i<(x_cor+5);i++)
+						for(int j =y_cor;j<(y_cor+5);j++)
+							for(int k =z_cor;k<(z_cor+5);k++)
+						{
+	
+				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+				 		}
+				}
+				cout<<"RIGHT Rasterize_array ["<<x_cor<<"]["<<y_cor<<"]["<<z_cor<<"]"<<rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)]<<endl;
 						   }
 					
 				}
@@ -417,6 +593,7 @@ vtkStandardNewMacro(MouseInteractorStyleRight4);
 // Constructor
 void VolVis::Render()
 {
+	xlook=0;
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	source->Update();
@@ -429,50 +606,7 @@ void VolVis::Render()
 	drawing = source1->GetOutput();
 	drawing->UpdateInformation();
 	
-	rayCastFunction_randomForest1 =  vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
-  
-	 volumeMapper_randomForest1 = vtkSmartPointer<vtkVolumeRayCastMapper>::New();
-     volumeColor1 = vtkSmartPointer<vtkColorTransferFunction>::New();
-    volumeScalarOpacity1 = vtkSmartPointer<vtkPiecewiseFunction>::New();
-    volumeGradientOpacity1 = vtkSmartPointer<vtkPiecewiseFunction>::New();
-    volumeProperty1 = vtkSmartPointer<vtkVolumeProperty>::New();
-	volume_randomForest1 = vtkSmartPointer<vtkVolume>::New();
-
-
-
-	//----------------------------
-	  
-	 
-	 volumeColor1->AddRGBPoint(0,    0.0, 0.0, 0.0);
-	  volumeColor1->AddRGBPoint(150,  1, 0, 0);
-      volumeColor1->AddRGBPoint(550, 0, 1, 0);
-	  volumeColor1->AddRGBPoint(1200, 0, 0, 1);
-	  volumeColor1->AddRGBPoint(1400, 0.7, 0.75, 0.87);
-	  volumeColor1->AddRGBPoint(1500, 1, 1, 0);
-	  volumeColor1->AddRGBPoint(1600, 0.5, 0, 0.5);
-	 
-    // The opacity transfer function is used to control the opacity
-    // of different tissue types.
-     volumeScalarOpacity1->AddPoint(0,    0);
-	 volumeScalarOpacity1->AddPoint(99,    0);
-     volumeScalarOpacity1->AddPoint(100,  1);
-	 volumeScalarOpacity1->AddPoint(200,  1);
-     volumeScalarOpacity1->AddPoint(500, 1);
-	 volumeScalarOpacity1->AddPoint(600, 1);
-	 volumeScalarOpacity1->AddPoint(1000, 1);
-	 volumeScalarOpacity1->AddPoint(1200, 1);
-	 volumeScalarOpacity1->AddPoint(1350, 1);
-	 volumeScalarOpacity1->AddPoint(1450, 1);
-	 volumeScalarOpacity1->AddPoint(1451, 1);
-	 volumeScalarOpacity1->AddPoint(1550, 1);
-	 volumeScalarOpacity1->AddPoint(1551, 1);
-	 volumeScalarOpacity1->AddPoint(1650, 1);
-	 volumeScalarOpacity1->AddPoint(140001, 0);
-   //volumeGradientOpacity->AddPoint(0,   0.0);
-    //volumeGradientOpacity->AddPoint(90,  0.5);
-    //volumeGradientOpacity->AddPoint(100, 1.0);
-    
-	//==============================
+	
 	 
 	colorImagePrediction = source->GetOutput();
 	colorImagePrediction->UpdateInformation();
@@ -530,19 +664,26 @@ void VolVis::Render()
   //**********************************************************************************//
   lut123 = vtkSmartPointer<vtkLookupTable>::New();
   //int tableSize = std::max(resolution*resolution + 1, 10);
-  lut123->SetNumberOfTableValues(x_dim*y_dim*z_dim);
+  lut123->SetNumberOfTableValues(7);
+  lut123->SetTableValue(0,1,1,1);
+  lut123->SetTableValue(1,1,0,0);
+  lut123->SetTableValue(2,0,1,0);
+  lut123->SetTableValue(3,0,1,1);
+  lut123->SetTableValue(4,1,0.4,0);
+  lut123->SetTableValue(5,1,1,0);
+  lut123->SetTableValue(6,0.5,0,0.5);
   //lut->SetNumberOfColors(4);
   lut123->Build();
- for( int i =0 ;i< x_dim;i++)
-	  for( int j =0 ;j< y_dim;j++)
-		  for( int k =0 ;k< z_dim;k++)
-			lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),1,0.4,0.3,0);
+
 			imageSliceMapper->SetInputConnection(colorImage->GetProducerPort());
-  imageSliceMapperColor->SetInputConnection(colorImage->GetProducerPort());
+  imageSliceMapperColor->SetInputConnection(drawing->GetProducerPort());
   imageSlice->SetMapper(imageSliceMapper);
   imageSliceColor->SetMapper(imageSliceMapperColor);
+  imageSliceColor->GetProperty()->SetLookupTable(lut123);
+  imageSliceColor->GetProperty()->SetOpacity(0.5);
+  imageSliceColor->Update();
+
   
-    
   imageSliceMapper->SliceFacesCameraOn();
   imageSliceMapper->SetSliceNumber(30);
   imageSliceMapperColor->SliceFacesCameraOn();
@@ -576,19 +717,30 @@ void VolVis::Render()
   //Add to Renderer                                                                   //
   //**********************************************************************************//
   imageSliceMapper2->SetInputConnection(colorImage->GetProducerPort());
-  
+  imageSliceMapper2Color->SetInputConnection(drawing->GetProducerPort());
   
   imageSlice2->SetMapper(imageSliceMapper2);
-
+  imageSlice2Color->SetMapper(imageSliceMapper2Color);
   imageSliceMapper2->SliceFacesCameraOn();
   imageSliceMapper2->SetSliceNumber(30);
+  imageSliceMapper2Color->SliceFacesCameraOn();
+  imageSliceMapper2Color->SetSliceNumber(30);
+
   imageSlice2->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
   imageSlice2->RotateY(90);
+  imageSlice2Color->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
+  imageSlice2Color->RotateY(90);
+
   //imageSlice2->RotateWXYZ(0,0,90,0);
   imageSliceMapper2->SetOrientationToX();
-
+  imageSliceMapper2Color->SetOrientationToX();
+  imageSlice2Color->SetMapper(imageSliceMapper2Color);
+  imageSlice2Color->GetProperty()->SetLookupTable(lut123);
+  imageSlice2Color->GetProperty()->SetOpacity(0.5);
+  imageSlice2Color->Update();
   
-  centerRenderer->AddActor(imageSlice2); 
+  centerRenderer->AddActor(imageSlice2);
+  centerRenderer->AddActor(imageSlice2Color);
   centerRenderer->ResetCamera();
   
   renderWindow->AddRenderer(centerRenderer);
@@ -623,6 +775,7 @@ void VolVis::Render()
   //**********************************************************************************//
  
   imageSliceMapper3->SetInputConnection(colorImage->GetProducerPort());
+  imageSliceMapper3Color->SetInputConnection(drawing->GetProducerPort());
   
   
   imageSlice3->SetMapper(imageSliceMapper3);
@@ -632,9 +785,20 @@ void VolVis::Render()
 
   imageSlice3->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
   imageSlice3->RotateX(90);
+  imageSlice3Color->SetMapper(imageSliceMapper3Color);
+	
+  imageSliceMapper3Color->SliceFacesCameraOn();
+  imageSliceMapper3Color->SetSliceNumber(30);
+
+  imageSlice3Color->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
+  imageSlice3Color->RotateX(90);
   //imageSliceMapper3->SetOrientationToX();
-  
+  imageSlice3Color->SetMapper(imageSliceMapper3Color);
+  imageSlice3Color->GetProperty()->SetLookupTable(lut123);
+  imageSlice3Color->GetProperty()->SetOpacity(0.5);
+  imageSlice3Color->Update();
   rightRenderer->AddActor(imageSlice3);
+  rightRenderer->AddActor(imageSlice3Color);
   rightRenderer->ResetCamera();
   renderWindow->AddRenderer(rightRenderer);
   rightRenderer->SetBackground(.4, .5, .6);
@@ -774,9 +938,11 @@ VolVis::VolVis()
   //double rightViewport[4] = {0.66, 0.0, 1.0, 0.4};
   
   imageSlice2 = vtkSmartPointer<vtkImageSlice>::New();
+  imageSlice2Color = vtkSmartPointer<vtkImageSlice>::New();
   centerRenderer = vtkSmartPointer<vtkRenderer>::New();
   
   imageSlice3 = vtkSmartPointer<vtkImageSlice>::New();
+  imageSlice3Color = vtkSmartPointer<vtkImageSlice>::New();
   rightRenderer = vtkSmartPointer<vtkRenderer>::New();
  
   //==========================================================================================================================
@@ -1391,71 +1557,29 @@ ifstream train_file ("E:/SemesterIII/Thesis/VolVis_build/TrainValue.dat");
 ifstream indexTrain_file ("E:/SemesterIII/Thesis/VolVis_build/Index1.dat");
 ifstream time_file ("E:/SemesterIII/Thesis/VolVis_build/timeFile.dat");
 getline(time_file,indexTrain_line);
+//double temp = ::atof(indexTrain_line.c_str());
+this->RandomForest_accuracy->setText(QString::fromStdString(indexTrain_line));
+this->RandomForest_accuracy->update();
+getline(time_file,indexTrain_line);
 double temp = ::atof(indexTrain_line.c_str());
-temp/=1000;
+this->RandomForestTrainingTime->setText(QString::number(temp));
+this->RandomForestTrainingTime->update();
+getline(time_file,indexTrain_line);
+//temp = ::atof(indexTrain_line.c_str());
+this->SVM_accuracy->setText(QString::fromStdString(indexTrain_line));
+this->SVM_accuracy->update();
+getline(time_file,indexTrain_line);
+temp = ::atof(indexTrain_line.c_str());
 this->SVMTrainingTime->setText(QString::number(temp));
 this->SVMTrainingTime->update();
 getline(time_file,indexTrain_line);
 temp = ::atof(indexTrain_line.c_str());
-temp/=1000;
-this->SVMPredictionTime->setText(QString::number(temp));
-this->SVMPredictionTime->update();
-getline(time_file,indexTrain_line);
-temp = ::atof(indexTrain_line.c_str());
-this->RandomForestTrainingTime->setText(QString::number(temp));
-this->RandomForestTrainingTime->update();
-getline(time_file,indexTrain_line);
-temp = ::atof(indexTrain_line.c_str());
 this->RandomForestPredictionTime->setText(QString::number(temp));
 this->RandomForestPredictionTime->update();
- if (randomForest_file.is_open())
-  {
-    while (! train_file.eof() )
-    {
-      getline(indexTrain_file,indexTrain_line);
-	  getline(train_file,train_line);
-	  
-	  train_num = atoi(train_line.c_str());
-	  indexTrain_num = atoi(indexTrain_line.c_str());
-		int prodTrain = x_dim*y_dim;
-		int x1Train = indexTrain_num % x_dim;
-		int y1Train = (indexTrain_num% prodTrain) / x_dim;
-		int z1Train = indexTrain_num /prodTrain;
-		rasterize_array_accuracy[x1Train+(y1Train*x_dim)+(z1Train*x_dim*y_dim)] = train_num;
-	 // cout<<atoi(line.c_str())<<" "<<atoi(line1.c_str())<<endl;
-    }}
- 
- int fourth_check =0;
-	 float accuracy_SVM=0,accuracy_randomForest=0,accuracy_Total=0;
- for(int i = 0; i < x_dim; i++)
-		for(int j = 0; j < y_dim; j++)
-			for(int k = 0; k < z_dim; k++)
-			{
-				if(rasterize_array_accuracy[i+(j*x_dim)+(k*x_dim*y_dim)] != 0)
-				{
-					
-					if(fourth_check != 3)
-					{
-						fourth_check++;
-					}
-					else
-					{
-						fourth_check =0;
-						accuracy_Total+=1;
-						if(rasterize_array_accuracy[i+(j*x_dim)+(k*x_dim*y_dim)] == rasterize_array_SVM[i+(j*x_dim)+(k*x_dim*y_dim)])
-							accuracy_SVM+=1;
-						if(rasterize_array_accuracy[i+(j*x_dim)+(k*x_dim*y_dim)] == rasterize_array_randomForest[i+(j*x_dim)+(k*x_dim*y_dim)])
-							accuracy_randomForest+=1;
-					}
-				}
-			}
-		   
-			cout<<"+++++++++++++ACCURACY SVM = "<<float(accuracy_SVM/accuracy_Total)*100<< " ==================="<<accuracy_Total<<endl;
-			this->SVM_accuracy->setText((QString::number(float(accuracy_SVM/accuracy_Total)*100)));
-			cout<<"+++++++++++++ACCURACY Random Forest = "<<float(accuracy_randomForest/accuracy_Total)*100<< " ==================="<<accuracy_Total<<endl;
-			this->RandomForest_accuracy->setText(QString::number(float(accuracy_randomForest/accuracy_Total)*100));
-			this->RandomForest_accuracy->update();
-			this->SVM_accuracy->update();
+getline(time_file,indexTrain_line);
+temp = ::atof(indexTrain_line.c_str());
+this->SVMPredictionTime->setText(QString::number(temp));
+this->SVMPredictionTime->update();
 			VolVis::RenderPrediction();		 
 	
  }
@@ -1572,8 +1696,9 @@ void VolVis::RenderPrediction()
 	
     // Finally, add the volume to the renderer
     mainRenderer_randomForest->AddViewProp(volume_randomForest);
-
-
+	mainRenderer_randomForest->SetActiveCamera(mainRenderer->GetActiveCamera());
+	mainRenderer->SetActiveCamera(mainRenderer_randomForest->GetActiveCamera());
+	
 	//vtkSmartPointer<vtkImageMapToColors> firstColorMapper = 
       //vtkSmartPointer<vtkImageMapToColors>::New();
 	//firstColorMapper->SetInputConnection( colorImage->GetProducerPort() );
@@ -1636,153 +1761,42 @@ void VolVis::RenderPrediction()
 //**************************************************************************************************************************************//
 void VolVis::renderLeft()
 {
-	/*double origin[3];
-    colorImagePrediction->GetOrigin(origin);
- 
-    double spacing[3];
-    colorImagePrediction->GetSpacing(spacing);
+	this->qvtkWidgetMain->update();
+	this->qvtkWidgetMain_2->update();
+	drawing->UpdateInformation();
+	imageSliceColor->Update();
+	imageSliceMapperColor->Update();
+	this->qvtkWidgetCenter->update();
 	
-  imageSliceMapperColor->SetInputConnection(colorImagePrediction->GetProducerPort());
-  imageSliceColor->SetMapper(imageSliceMapperColor);
-  //imageSliceColor->GetProperty()->SetLookupTable(lut123);
-  //imageSliceColor->Update();
-  //imageSliceMapper->SliceFacesCameraOn();
-  //imageSliceMapper->SetSliceNumber(30);
-  //leftRenderer->AddActor(imageSliceColor);
- // 
-  lut123->Build();
-	 for( int i =0 ; i < x_dim; i++)
-	  for( int j =0 ; j < y_dim; j++)
-		  for( int k = 0 ; k < z_dim; k++)
-		  {
-			  //lut123->SetTableValue(i+(1*x_dim)+(k*x_dim*y_dim),0,0,1,1);
-			   //lut123->SetTableValue(i+(2*x_dim)+(k*x_dim*y_dim),0,0,1,1);
-
-			    //lut123->SetTableValue(i+(3*x_dim)+(k*x_dim*y_dim),0,0,1,1);
- //lut123->SetTableValue(i+(4*x_dim)+(k*x_dim*y_dim),0,0,1,1);
-			   // lut123->SetTableValue(i+(5*x_dim)+(k*x_dim*y_dim),0,0,1,1);
-			  //lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),1,1,0,1);
-			  if((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1))
-			  lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),1,0,0,1);
-			  else if((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2))
-			  lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),0,1,0,1);
-			  else if((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 8) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3))
-			  {
-				  //for(int x=i;x<(i+10);x++)
-					// for(int y=j;y<(j+10);y++)
-						//for(int z=k;z<(k+10);z++)
-							lut123->SetTableValue(i+(j*x_dim)+(k*x_dim*y_dim),0,0,1,1);
-			//cout<<"check";
-			  }
-		  }
-		//  for(int i=0;i<x_dim;i++)
-			//  lut123->SetTableValue(i,1,1,0,1);
-			  
-			//  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3) && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] != 1)) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
-			 // {
-				//  rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
-				  
-			 // }
-			  //leftRenderer->AddActor(imageSlice);
-		   lut123->Build();
-		   imageSliceColor->GetProperty()->SetLookupTable(lut123);
-           imageSliceColor->Update();
-		 // imageSliceColor->GetProperty()->SetLookupTable(lut123);
-		 // lut123->Build();
- // imageSliceColor->Update();
-  //imageSliceMapper->SliceFacesCameraOn();
-  //imageSliceMapper->SetSliceNumber(30);
-  leftRenderer->AddActor(imageSliceColor);
- // leftRenderer->ResetCamera();//----------------------
-  renderWindow->AddRenderer(leftRenderer);
-  CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-	mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-	
-  for( int i =0 ;i< x_dim;i++)
+	if(xlook==0)
+	{	for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
-			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6) && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] != 1)) || (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7 && (rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
-			  {
-				  rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
-				  
-				  vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();			  
-				  CubeSource->SetCenter(i,j,k);
-				  
-				  CubeSource->SetXLength(5);
-				  CubeSource->SetYLength(5);
-				  CubeSource->SetZLength(1);
-				  CubeSource->Update();
-				  mapper->SetInputConnection(CubeSource->GetOutputPort());
-				  actor->SetMapper(mapper);
-				  actorprop_left_red = vtkSmartPointer<vtkProperty>::New();
-				 if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
-					actorprop_left_red->SetColor(255,0,0);
-				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
-					actorprop_left_red->SetColor(0,255,0);
-				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
-					actorprop_left_red->SetColor(0,0,255);
-						else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
-						actorprop_left_red->SetColor(176,192,222);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5)
-						actorprop_left_red->SetColor(255,255,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6)
-						actorprop_left_red->SetColor(128,0,128);
-				 else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7)
-				 {
-					actorprop_left_red->SetColor(255,255,255);
-					rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
-					rasterize_array_checkleft[i+(j*x_dim)+(k*x_dim*y_dim)]=0;
-				 }
-				 actor->SetProperty(actorprop_left_red);
-				 leftRenderer->AddActor(actor);
-			  }
+			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+			  xlook++;
+	}
+  
+		  drawing->UpdateInformation();
+		  lut123->Build();
+			  imageSliceColor->Update();
+			  leftRenderer->AddActor(imageSliceColor);
+			  
+	this->qvtkWidgetLeft->update();
+	this->qvtkWidgetCenter->update();
 	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
 	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
 
 	//this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
 	//this->qvtkWidgetLeft->GetRenderWindow()->Render();
 	this->qvtkWidgetLeft->update();
-	//CubeSource->Delete();*/
-
-	 
-  /*  for( int i =0 ;i< x_dim;i++)
-	  for( int j =0 ;j< y_dim;j++)
-		  for( int k =0 ;k< z_dim;k++)
-		  {
-			  double value = drawing->GetScalarComponentAsDouble(i,j,k,0);
-				  if(value !=150 ||value !=550 ||value !=1200 ||value !=1400 ||value !=1500 ||value !=1600)
-			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
-		  }
-	*/ 
-    // Finally, add the volume to the renderer
-	volumeMapper_randomForest1->SetInputConnection(drawing->GetProducerPort());
-     volumeMapper_randomForest1->SetVolumeRayCastFunction(rayCastFunction_randomForest1);
-	
-    volumeProperty1->SetColor(volumeColor1);
-    volumeProperty1->SetScalarOpacity(volumeScalarOpacity1);
-    //volumeProperty->SetGradientOpacity(volumeGradientOpacity);
-    volumeProperty1->SetInterpolationTypeToLinear();
-	//volumeProperty->SetInterpolationTypeToNearest();
-    volumeProperty1->ShadeOn();
-    volumeProperty1->SetAmbient(0.4);
-    volumeProperty1->SetDiffuse(0.6);
-    volumeProperty1->SetSpecular(0.2);
-	 
-
-    volume_randomForest1->SetMapper(volumeMapper_randomForest1);
-    volume_randomForest1->SetProperty(volumeProperty1);
-	  leftRenderer->AddViewProp(volume_randomForest1);
-
-
-		  
-	this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
-	this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
-
-	this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
-	this->qvtkWidgetLeft->GetRenderWindow()->Render();
+	left_sliceNumber++;
+	imageSliceMapper->SetSliceNumber(left_sliceNumber);
+	imageSliceMapperColor->SetSliceNumber(left_sliceNumber);
 	this->qvtkWidgetLeft->update();
-
-
+	left_sliceNumber--;
+	imageSliceMapper->SetSliceNumber(left_sliceNumber);
+	imageSliceMapperColor->SetSliceNumber(left_sliceNumber);
+	this->qvtkWidgetLeft->update();
 
 		  
 }
@@ -1795,88 +1809,39 @@ void VolVis::renderLeft()
 
 void VolVis::renderCenter()
 {
-	
-  int resized_k,resized_j;
-  std::vector<vtkSmartPointer<vtkActor> > actors;
-  vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-  vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-  for( int i =0 ;i< x_dim;i++)
+	imageSlice2Color->Update();
+	imageSliceMapper2Color->Update();
+	this->qvtkWidgetCenter->update();
+	if(xlook==1)
+	{	for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
-			  if(((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6) && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] != 1))|| (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7 && (rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
-			  {
-				    rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] = 1;
-					
-					vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
-					CubeSource->SetXLength(5);
-					CubeSource->SetYLength(5);
-					CubeSource->SetZLength(5);
-					if(z_dim == y_dim)
-					{
-					      i=i;
-					}	     
-					else if(z_dim < y_dim)
-					{
-						//int split = (200-((z_dim*200)/y_dim));
-						int split = y_dim - z_dim;
-						split/=2;
-						
-						//split = (split * z_dim)/ y_dim;
-						//split = y_dim - (split);
-						//x := (c - a) * (z - y) / (b - a) + y
-					    // cout <<" K "<<k<<endl;
-					      // resized_k = (k*(200-(2*split))/z_dim) + split;
-						     //resized_k = (k*200)/y_dim;
-							 resized_k = k + split;
-						  // cout<<"===========resized_k---------"<<k;
-						   resized_j = (j);
-
-				}
-				/*else if(y_dim < z_dim)
-				{
-					int split = (200-((y_dim*200)/(2*y_dim)));
-					resized_j = ((j+split) * (z_dim - split))/(y_dim + split);
-					resized_k =k;       
-				}*///cout<<"CUBE :"<<resized_k<<" "<<resized_j<<" "<<i<<endl;
-					int split = (200-((z_dim*200)/y_dim))/2;
-					if((resized_k<split) || (resized_k > (200-split)))
-						cout<<" K : "<<k<<endl;
-					CubeSource->SetCenter(resized_k,resized_j,128-i);
-					CubeSource->Update();
-					mapper->SetInputConnection(CubeSource->GetOutputPort());
-					actor->SetMapper(mapper);
-					actorprop_center_red = vtkSmartPointer<vtkProperty>::New();
-					if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
-						actorprop_center_red->SetColor(255,0,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
-						actorprop_center_red->SetColor(0,255,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
-						actorprop_center_red->SetColor(0,0,255);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
-						actorprop_center_red->SetColor(176,192,222);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5)
-						actorprop_center_red->SetColor(255,255,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6)
-						actorprop_center_red->SetColor(128,0,128);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7)
-					{
-						actorprop_center_red->SetColor(255,255,255);
-					    rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
-						rasterize_array_checkcenter[i+(j*x_dim)+(k*x_dim*y_dim)] = 0;
-					}
-					actor->SetProperty(actorprop_center_red);
-					centerRenderer->AddActor(actor);
-			  // centerRenderer->AddActor(imageSliceColor);
- // leftRenderer->ResetCamera();//----------------------
-  //renderWindow->AddRenderer(centerRenderer);
- 
-	this->qvtkWidgetCenter->GetRenderWindow()->GetInteractor()->ReInitialize();
-	this->qvtkWidgetCenter->GetRenderWindow()->GetInteractor()->Render();
-	this->qvtkWidgetCenter->GetRenderWindow()->AddRenderer(centerRenderer);
-	this->qvtkWidgetCenter->GetRenderWindow()->Render();
-	this->qvtkWidgetCenter->update();
-	//CubeSource->Delete();
+			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+			  xlook++;
 	}
+	drawing->UpdateInformation();
+		  lut123->Build();
+			  imageSlice2Color->Update();
+			  centerRenderer->AddActor(imageSlice2Color);
+			  
+	
+	this->qvtkWidgetCenter->update();
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
+
+	//this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
+	//this->qvtkWidgetLeft->GetRenderWindow()->Render();
+	this->qvtkWidgetCenter->update();
+	center_sliceNumber++;
+	imageSliceMapper2->SetSliceNumber(center_sliceNumber);
+	imageSliceMapper2Color->SetSliceNumber(center_sliceNumber);
+	this->qvtkWidgetCenter->update();
+	center_sliceNumber--;
+	imageSliceMapper2->SetSliceNumber(center_sliceNumber);
+	imageSliceMapper2Color->SetSliceNumber(center_sliceNumber);
+	this->qvtkWidgetCenter->update();
+
+		  
 
 }
 //**************************************************************************************************************************************//
@@ -1885,109 +1850,38 @@ void VolVis::renderCenter()
 //**************************************************************************************************************************************//
 void VolVis::renderRight()
 {
-	vtkSmartPointer<vtkCubeSource> CubeSource = vtkSmartPointer<vtkCubeSource>::New();
-	vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
-  int resized_i,resized_k;	
-  for( int i =0 ;i< x_dim;i++)
+	imageSlice3Color->Update();
+	imageSliceMapper3Color->Update();
+	this->qvtkWidgetRight->update();
+	if(xlook==2)
+	{	for( int i =0 ;i< x_dim;i++)
 	  for( int j =0 ;j< y_dim;j++)
 		  for( int k =0 ;k< z_dim;k++)
-			  // rasterize_array is the array to visualize the volume as red, green or blue. Rasterize_array_checkright is the array to check if cube at that voxel is already drawn.                                                                                                              
-			  if (((rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5 || rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6) && (rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] != 1))|| (rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7 && (rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)))
-			  {
-				    if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] !=0)
-					{
-						rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)]=1;
-						
-					    vtkSmartPointer<vtkActor> actor = vtkSmartPointer<vtkActor>::New();
-						CubeSource->SetXLength(5);
-						CubeSource->SetYLength(5);
-						CubeSource->SetZLength(5);
-						if(z_dim == x_dim)
-							{
-								  //Do Nothing
-						  
-							}	     
-						else if(z_dim < x_dim)
-							{
-								//int split = (200-((z_dim*200)/x_dim));
-								//split/=2;
-						
-						//split = (split * z_dim)/ y_dim;
-						//split = y_dim - (split);
-						//x := (c - a) * (z - y) / (b - a) + y
-					    // cout <<" K "<<k<<endl;
-					      // resized_k = (k*(200-(2*split))/z_dim) + split;
-						     //resized_k = k + split;
-						  // cout<<"===========resized_k---------"<<k;
-						   //resized_i = (i);
-
-						   //===============
-						   //int split = (200-((z_dim*200)/y_dim));
-						int split = y_dim - z_dim;
-						split/=2;
-						
-						//split = (split * z_dim)/ y_dim;
-						//split = y_dim - (split);
-						//x := (c - a) * (z - y) / (b - a) + y
-					    // cout <<" K "<<k<<endl;
-					      // resized_k = (k*(200-(2*split))/z_dim) + split;
-						     //resized_k = (k*200)/y_dim;
-							 resized_k = k + split;
-						  // cout<<"===========resized_k---------"<<k;
-						   resized_i = (i);
-
-				//	=============
-					//int split = (200-((z_dim*200)/x_dim));
-					
-				//	split = (split * z_dim)/ x_dim;
-					//split = x_dim - (split);
-					//resized_k = (k*split)/z_dim;
-					//resized_i =i;
-					
-				}
-				else if(x_dim < z_dim)
-				{
-					int split = (200-((x_dim*200)/(2*x_dim)));
-					resized_i = ((i+split) * (z_dim - split))/(x_dim + split);
-					resized_k =k;       
-				}
-					CubeSource->SetCenter(resized_i,resized_k,j);
-					CubeSource->Update();
-	 				mapper->SetInputConnection(CubeSource->GetOutputPort());
-		     	    actor->SetMapper(mapper);
-					
-				    actorprop_left_red = vtkSmartPointer<vtkProperty>::New();
-				    if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 1)
-						actorprop_left_red->SetColor(255,0,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 2)
-						actorprop_left_red->SetColor(0,255,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 3)
-						actorprop_left_red->SetColor(0,0,255);
-						else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 4)
-						actorprop_left_red->SetColor(176,192,222);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 5)
-						actorprop_left_red->SetColor(255,255,0);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 6)
-						actorprop_left_red->SetColor(128,0,128);
-					else if(rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] == 7)
-					{
-						actorprop_left_red->SetColor(0,0,255);
-					    rasterize_array[i+(j*x_dim)+(k*x_dim*y_dim)] =0;
-						rasterize_array_checkright[i+(j*x_dim)+(k*x_dim*y_dim)] =0;
-					}
-					actor->SetProperty(actorprop_left_red);
-					
-					rightRenderer->AddActor(actor);
-			   //rightRenderer->AddActor(imageSliceColor);
- // leftRenderer->ResetCamera();//----------------------
-  //renderWindow->AddRenderer(rightRenderer);
-	this->qvtkWidgetRight->GetRenderWindow()->RemoveRenderer(rightRenderer);
-	this->qvtkWidgetRight->GetRenderWindow()->GetInteractor()->ReInitialize();
-	this->qvtkWidgetRight->GetRenderWindow()->GetInteractor()->Render();
-	this->qvtkWidgetRight->GetRenderWindow()->AddRenderer(rightRenderer);
-	this->qvtkWidgetRight->GetRenderWindow()->Render();
+			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+			  xlook++;
+	}
+	drawing->UpdateInformation();
+		  lut123->Build();
+			  imageSlice3Color->Update();
+			  rightRenderer->AddActor(imageSlice3Color);
+			  
+	
 	this->qvtkWidgetRight->update();
-					}}
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->ReInitialize();
+	//this->qvtkWidgetLeft->GetRenderWindow()->GetInteractor()->Render();
+
+	//this->qvtkWidgetLeft->GetRenderWindow()->AddRenderer(leftRenderer);
+	//this->qvtkWidgetLeft->GetRenderWindow()->Render();
+	this->qvtkWidgetRight->update();
+	right_sliceNumber++;
+	imageSliceMapper3->SetSliceNumber(right_sliceNumber);
+	imageSliceMapper3Color->SetSliceNumber(right_sliceNumber);
+	this->qvtkWidgetRight->update();
+	right_sliceNumber--;
+	imageSliceMapper3->SetSliceNumber(right_sliceNumber);
+	imageSliceMapper3Color->SetSliceNumber(right_sliceNumber);
+	this->qvtkWidgetRight->update();
+
 }
 
 /*void VolVis::setSliceNumberMainLeft(int a)
@@ -2008,7 +1902,7 @@ void VolVis::setSliceNumberLeft(int a)
 {
 	imageSliceMapper->SetSliceNumber(a);
 	imageSliceMapperColor->SetSliceNumber(a);
-	this->qvtkWidgetCenter->update();
+	this->qvtkWidgetLeft->update();
 	left_sliceNumber = a;
 }
 
@@ -2020,6 +1914,7 @@ void VolVis::setSliceNumberLeft(int a)
 void VolVis::setSliceNumberCenter(int a)
 {
 	imageSliceMapper2->SetSliceNumber(a);
+	imageSliceMapper2Color->SetSliceNumber(a);
 	this->qvtkWidgetCenter->update();
 	center_sliceNumber = a;
 	cout<<a<<endl;
@@ -2034,6 +1929,7 @@ void VolVis::setSliceNumberCenter(int a)
 void VolVis::setSliceNumberRight(int a)
 {
 	imageSliceMapper3->SetSliceNumber(a);
+	imageSliceMapper3Color->SetSliceNumber(a);
 	this->qvtkWidgetRight->update();
 	right_sliceNumber = a;
 
@@ -2084,6 +1980,8 @@ void VolVis::updateImageArrayafterTraining()
 	this->RandomForestPredictionTime->setText(QString::fromStdString(line));
 	
 	//QDesktopServices::openUrl(QUrl("file:///"+QString::fromStdString(filename2),QUrl::TolerantMode));
+	
+
 	VolVis::renderMain();
 	VolVis::renderMainRandomForest();
 }
@@ -2172,6 +2070,8 @@ void VolVis::slotExit()
  VolVis::~VolVis() {
  imageSliceMapper= NULL;
  imageSliceMapperColor= NULL;
+imageSliceMapper2Color= NULL;
+ imageSliceMapper3Color= NULL;
  imageSliceMapper2= NULL;
  imageSliceMapper3= NULL;
  imageSliceMapperMain = NULL;

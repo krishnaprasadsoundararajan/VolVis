@@ -25,12 +25,15 @@ class VolVis : public QMainWindow, private Ui::VolVis
 {
   Q_OBJECT
 public:
+	int xlook;
 	vtkSmartPointer<vtkCubeSource> CubeSource;
     vtkSmartPointer<vtkPolyDataMapper> mapper;
 	vtkSmartPointer<vtkImageSlice> imageSlice;
 	vtkSmartPointer<vtkImageSlice> imageSliceColor;
 	vtkSmartPointer<vtkImageSlice> imageSlice2;
+	vtkSmartPointer<vtkImageSlice> imageSlice2Color;
 	vtkSmartPointer<vtkImageSlice> imageSlice3;
+	vtkSmartPointer<vtkImageSlice> imageSlice3Color;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMain;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMainLeft;
 	//vtkSmartPointer<vtkImageSlice> imageSliceMainCenter;
@@ -49,13 +52,7 @@ public:
 	vtkSmartPointer<vtkPolyData> linesPolyData_right_green;
 	vtkSmartPointer<vtkPolyData> linesPolyData_right_blue;
 
-	vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction_randomForest1;
-	vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper_randomForest1;
-	 vtkSmartPointer<vtkColorTransferFunction> volumeColor1;
-	 vtkSmartPointer<vtkPiecewiseFunction> volumeScalarOpacity1;
-	 vtkSmartPointer<vtkPiecewiseFunction> volumeGradientOpacity1;
-	 vtkSmartPointer<vtkVolumeProperty> volumeProperty1;
-	 vtkSmartPointer<vtkVolume> volume_randomForest1;
+	
 	
 	vtkSmartPointer<vtkPolyDataMapper> mapper_left_red;
     vtkSmartPointer<vtkActor> actor_left_red;
