@@ -7,7 +7,7 @@
 class FeatureVector 
 {
 	public:
-	FeatureVector();
+		FeatureVector();
 	void GetPointGradient(int,int,int,vtkImageData*,double*);
 	void CreateTestTrainData(int x,int y,int z,int* (g));
 	void updateRasterizeArrayafterTraining(int (*g));

@@ -15,6 +15,9 @@
 #include <vtkImageSlice.h>
 #include <vtkImageViewer2.h>
 #include <vtkXMLImageDataReader.h>
+#include <vtkMetaImageReader.h>
+#include <vtkVolumeTextureMapper3D.h>
+#include <vtkSmartVolumeMapper.h>
 
 
 #include <vtkActor2D.h>
@@ -141,9 +144,9 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 				if(Color[0] == 255)//Red Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
-						for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+						for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
@@ -153,9 +156,9 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 				else if(Color[1] == 255)// Green Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-				for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
@@ -166,9 +169,9 @@ class MouseInteractorStyle4 : public vtkInteractorStyleImage
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
 				    
 			
-for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
@@ -177,9 +180,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[1] == 69)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,154);
@@ -188,9 +191,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 254)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-				 for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				 for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
@@ -200,9 +203,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 128)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
@@ -212,9 +215,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 333) 
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
@@ -243,7 +246,8 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
     virtual void OnRightButtonDown()
 	{
 		right_button_down =1;
-		this->StartWindowLevel();
+		this->EndWindowLevel();
+//this->StartWindowLevel();
 	}
 	//On releasing the right mouse button deactivates the WindowLevel changes on mouse move
 	virtual void OnRightButtonUp()
@@ -270,6 +274,7 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
      
 	 virtual void OnMouseMove()
 	 {
+		 this->EndWindowLevel();
 		int x_cor,y_cor,z_cor;
 		 vtkInteractorStyleImage::OnMouseMove();
 		 int x = this->Interactor->GetEventPosition()[0];
@@ -304,9 +309,9 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 							   if(Color[0] == 255)//Red Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
-						for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+						for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
@@ -316,9 +321,9 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 				else if(Color[1] == 255)// Green Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-				for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
@@ -329,9 +334,9 @@ class MouseInteractorStyleCenter4 : public vtkInteractorStyleImage
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
 				    
 			
-for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
@@ -340,9 +345,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[1] == 69)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,164);
@@ -351,9 +356,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 254)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-				 for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				 for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
@@ -363,9 +368,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 128)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
@@ -375,9 +380,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 333) 
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
@@ -484,9 +489,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 							    if(Color[0] == 255)//Red Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 1;//x+(y*x_dim)+((z)*x_dim*y_dim)
-						for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+						for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,50);
@@ -496,9 +501,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[1] == 255)// Green Color button pressed
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 2;
-				for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,100);
@@ -509,9 +514,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 3;
 				    
 			
-for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,130);
@@ -520,9 +525,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[1] == 69)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 4;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,164);
@@ -531,9 +536,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 254)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 5;
-				 for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+				 for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,200);
@@ -543,9 +548,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 128)
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 6;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,250);
@@ -555,9 +560,9 @@ for(int i =x_cor;i<(x_cor+5);i++)
 				else if(Color[0] == 333) 
 				{
 					rasterize_array[x_cor+(y_cor*x_dim)+(z_cor*x_dim*y_dim)] = 0;
-					for(int i =x_cor;i<(x_cor+5);i++)
-						for(int j =y_cor;j<(y_cor+5);j++)
-							for(int k =z_cor;k<(z_cor+5);k++)
+					for(int i =x_cor;i<(x_cor+2);i++)
+						for(int j =y_cor;j<(y_cor+2);j++)
+							for(int k =z_cor;k<(z_cor+2);k++)
 						{
 	
 				 drawing->SetScalarComponentFromDouble(i,j,k,0,0);
@@ -594,9 +599,11 @@ vtkStandardNewMacro(MouseInteractorStyleRight4);
 void VolVis::Render()
 {
 	xlook=0;
+	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	source->Update();
+	//PTR<vtkMetaImageReader> source1 = PTR<vtkMetaImageReader>::New();
 	PTR<vtkXMLImageDataReader> source1 = PTR<vtkXMLImageDataReader>::New();
 	source1->SetFileName(loadFileName.c_str());
 	source1->Update();
@@ -605,9 +612,10 @@ void VolVis::Render()
 	drawing = vtkSmartPointer<vtkImageData>::New();
 	drawing = source1->GetOutput();
 	drawing->UpdateInformation();
+	int extent[6];
+	drawing->GetExtent(extent);
 	
-	
-	 
+	cout<<"Extents "<<extent[0]<<" "<<extent[1]<<" "<<extent[2]<<" "<<extent[3]<<" "<<extent[4]<<" "<<extent[5]<<" "<<endl;
 	colorImagePrediction = source->GetOutput();
 	colorImagePrediction->UpdateInformation();
 	for( int i =0 ;i< x_dim;i++)
@@ -868,7 +876,7 @@ void VolVis::Render()
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderCenter()));
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderRight()));
     
-	timer->start(20);
+	timer->start(200);
 }	
 VolVis::VolVis() 
 {
@@ -1226,6 +1234,7 @@ void VolVis::renderMain()
 	else
 	{
 	cout<<"Button Pressed"<<endl;
+	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	
@@ -1235,6 +1244,7 @@ void VolVis::renderMain()
 	colorImagePrediction_randomForest = vtkSmartPointer<vtkImageData>::New();
 	//vtkSmartPointer<vtkImageData> colorImage;
 	colorImagePrediction = source->GetOutput();
+	 
 	colorImagePrediction->UpdateInformation();
 	colorImagePrediction_randomForest = source->GetOutput();
 	colorImagePrediction_randomForest->UpdateInformation();
@@ -1485,6 +1495,7 @@ ifstream myfile1(indexFileName.c_str());
 	else
 	{
 	cout<<"Button Pressed"<<endl;
+	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
 	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	
@@ -1592,16 +1603,20 @@ void VolVis::RenderPrediction()
 
 	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction_randomForest =
       vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
-  
-     vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
-       vtkSmartPointer<vtkVolumeRayCastMapper>::New();
+	  vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper =
+       vtkSmartPointer<vtkSmartVolumeMapper>::New();
+     //vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
+       //vtkSmartPointer<vtkVolumeRayCastMapper>::New();
      volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
-     volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
-
-	 vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper_randomForest =
-       vtkSmartPointer<vtkVolumeRayCastMapper>::New();
+     //volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
+	 vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper_randomForest =
+       vtkSmartPointer<vtkSmartVolumeMapper>::New();
+	 //PTR<vtkVolumeTextureMapper3D> volumeMapper_randomForest = PTR<vtkVolumeTextureMapper3D>::New();
+	 //vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper_randomForest =
+       //vtkSmartPointer<vtkVolumeRayCastMapper>::New();
      volumeMapper_randomForest->SetInputConnection(colorImagePrediction_randomForest->GetProducerPort());
-     volumeMapper_randomForest->SetVolumeRayCastFunction(rayCastFunction_randomForest);
+     
+	 //volumeMapper_randomForest->SetVolumeRayCastFunction(rayCastFunction_randomForest);
 	 
     // The color transfer function maps voxel intensities to colors.
     // It is modality-specific, and often anatomy-specific as well.
@@ -1812,13 +1827,13 @@ void VolVis::renderCenter()
 	imageSlice2Color->Update();
 	imageSliceMapper2Color->Update();
 	this->qvtkWidgetCenter->update();
-	if(xlook==1)
-	{	for( int i =0 ;i< x_dim;i++)
-	  for( int j =0 ;j< y_dim;j++)
-		  for( int k =0 ;k< z_dim;k++)
-			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
-			  xlook++;
-	}
+	//if(xlook==1)
+	//{	for( int i =0 ;i< x_dim;i++)
+	  //for( int j =0 ;j< y_dim;j++)
+		//  for( int k =0 ;k< z_dim;k++)
+			//  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+			  //xlook++;
+	//}
 	drawing->UpdateInformation();
 		  lut123->Build();
 			  imageSlice2Color->Update();
@@ -1853,13 +1868,13 @@ void VolVis::renderRight()
 	imageSlice3Color->Update();
 	imageSliceMapper3Color->Update();
 	this->qvtkWidgetRight->update();
-	if(xlook==2)
-	{	for( int i =0 ;i< x_dim;i++)
-	  for( int j =0 ;j< y_dim;j++)
-		  for( int k =0 ;k< z_dim;k++)
-			  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
-			  xlook++;
-	}
+	//if(xlook==2)
+	//{	for( int i =0 ;i< x_dim;i++)
+	  //for( int j =0 ;j< y_dim;j++)
+		//  for( int k =0 ;k< z_dim;k++)
+			//  drawing->SetScalarComponentFromDouble(i,j,k,0,0);
+			  //xlook++;
+	//}
 	drawing->UpdateInformation();
 		  lut123->Build();
 			  imageSlice3Color->Update();
