@@ -599,12 +599,12 @@ vtkStandardNewMacro(MouseInteractorStyleRight4);
 void VolVis::Render()
 {
 	xlook=0;
-	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
-	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
+	PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
+	//PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	source->Update();
-	//PTR<vtkMetaImageReader> source1 = PTR<vtkMetaImageReader>::New();
-	PTR<vtkXMLImageDataReader> source1 = PTR<vtkXMLImageDataReader>::New();
+	PTR<vtkMetaImageReader> source1 = PTR<vtkMetaImageReader>::New();
+	//PTR<vtkXMLImageDataReader> source1 = PTR<vtkXMLImageDataReader>::New();
 	source1->SetFileName(loadFileName.c_str());
 	source1->Update();
 	
@@ -676,8 +676,8 @@ void VolVis::Render()
   lut123->SetTableValue(0,1,1,1);
   lut123->SetTableValue(1,1,0,0);
   lut123->SetTableValue(2,0,1,0);
-  lut123->SetTableValue(3,0,1,1);
-  lut123->SetTableValue(4,1,0.4,0);
+  lut123->SetTableValue(3,0,0,1);
+  lut123->SetTableValue(4,1,0.27,0);
   lut123->SetTableValue(5,1,1,0);
   lut123->SetTableValue(6,0.5,0,0.5);
   //lut->SetNumberOfColors(4);
@@ -726,6 +726,7 @@ void VolVis::Render()
   //**********************************************************************************//
   imageSliceMapper2->SetInputConnection(colorImage->GetProducerPort());
   imageSliceMapper2Color->SetInputConnection(drawing->GetProducerPort());
+
   
   imageSlice2->SetMapper(imageSliceMapper2);
   imageSlice2Color->SetMapper(imageSliceMapper2Color);
@@ -792,14 +793,14 @@ void VolVis::Render()
   imageSliceMapper3->SetSliceNumber(30);
 
   imageSlice3->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
-  imageSlice3->RotateX(90);
+  imageSlice3->RotateX(-90);
   imageSlice3Color->SetMapper(imageSliceMapper3Color);
 	
   imageSliceMapper3Color->SliceFacesCameraOn();
   imageSliceMapper3Color->SetSliceNumber(30);
 
   imageSlice3Color->SetOrigin(x_dim/2,y_dim/2,z_dim/2);
-  imageSlice3Color->RotateX(90);
+  imageSlice3Color->RotateX(-90);
   //imageSliceMapper3->SetOrientationToX();
   imageSlice3Color->SetMapper(imageSliceMapper3Color);
   imageSlice3Color->GetProperty()->SetLookupTable(lut123);
@@ -877,6 +878,7 @@ void VolVis::Render()
 	connect(timer, SIGNAL(timeout()), this, SLOT(renderRight()));
     
 	timer->start(200);
+	//VolVis::LoadTrainFile();
 }	
 VolVis::VolVis() 
 {
@@ -984,7 +986,7 @@ VolVis::VolVis()
 	
 	
 	this->PredictSVM->connect(this->PredictSVM,SIGNAL(clicked()),this,SLOT(updateImageArrayafterTraining()));
-	
+		this->LoadTrain->connect(this->LoadTrain,SIGNAL(clicked()),this,SLOT(LoadTrainFile()));
 	this->pushButtonOpacity->connect(this->pushButtonOpacity,SIGNAL(clicked()),this,SLOT(updateOpacity()));
 	//connect(timer, SIGNAL(timeout()), this, SLOT(renderMain()));
 	opacityRed = opacityBlue = opacityGreen = opacityYellow = opacityOrange = opacityPurple = 0.5;
@@ -1234,8 +1236,8 @@ void VolVis::renderMain()
 	else
 	{
 	cout<<"Button Pressed"<<endl;
-	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
-	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
+	PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
+	//PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	
 	source->Update();
@@ -1393,6 +1395,7 @@ ifstream myfile1(indexFileName.c_str());
 	//	  lut->SetTableValue(num1,1,0,0.7,1);
 		  //rasterize_array[num1] = num2 +5;
 		  colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,150);
+		  
 		  one++;
       // read next line and print it... but how?
       }
@@ -1495,8 +1498,8 @@ ifstream myfile1(indexFileName.c_str());
 	else
 	{
 	cout<<"Button Pressed"<<endl;
-	//PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
-	PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
+	PTR<vtkMetaImageReader> source = PTR<vtkMetaImageReader>::New();
+	//PTR<vtkXMLImageDataReader> source = PTR<vtkXMLImageDataReader>::New();
 	source->SetFileName(loadFileName.c_str());
 	
 	source->Update();
@@ -1566,7 +1569,7 @@ ifstream index_file (indexFileName.c_str());
 std::string indexTrain_line,train_line;
 ifstream train_file ("E:/SemesterIII/Thesis/VolVis_build/TrainValue.dat");
 ifstream indexTrain_file ("E:/SemesterIII/Thesis/VolVis_build/Index1.dat");
-ifstream time_file ("E:/SemesterIII/Thesis/VolVis_build/timeFile.dat");
+ifstream time_file ("E:/SemesterIII/Thesis/VolVis_build/Results/Tooth_head/timeFile.dat");
 getline(time_file,indexTrain_line);
 //double temp = ::atof(indexTrain_line.c_str());
 this->RandomForest_accuracy->setText(QString::fromStdString(indexTrain_line));
@@ -1595,7 +1598,91 @@ this->SVMPredictionTime->update();
 	
  }
  }
+void VolVis::LoadTrainFile()
+{
+int num1,num2,randomForest_num;
+std::string line,line1,randomForest_line;
+ifstream myfile ("E:/SemesterIII/Thesis/VolVis_build/Results/TrainValue.dat");
+ifstream myfile1("E:/SemesterIII/Thesis/VolVis_build/Results/Index1.dat");
+ if (myfile.is_open())
+  {
+    while (! myfile.eof() )
+    {
+      getline(myfile,line);
+	  getline(myfile1,line1);
+	  num1 = atoi(line1.c_str());
+	  num2 = atoi(line.c_str());
+		int prod = x_dim*y_dim;
+		int x1 = num1 % x_dim;
+		int y1 = (num1% prod) / x_dim;
+		int z1 = num1 /prod;
+	 // cout<<atoi(line.c_str())<<" "<<atoi(line1.c_str())<<endl;
+		rasterize_array_SVM[num1] = num2;
+     if (num2==1)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 1;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,50);
+				 		}
+      }
+	 else if (num2==2)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 2;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,100);
+				 		}
+	 }
+	 else if (num2==3)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 3;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,130);
+				 		}
+		  }
+	 if (num2==4)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 4;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,154);
+				 		}
+	  }
+	 else if (num2==5)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 5;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,200);
+				 		}
+		  }
+	 else if (num2==6)
+      {
+		  rasterize_array[x1+(y1*x_dim)+(z1*x_dim*y_dim)] = 6;
+				for(int i =x1;i<(x1+2);i++)
+						for(int j =y1;j<(y1+2);j++)
+							for(int k =z1;k<(z1+2);k++)
+						{
+							drawing->SetScalarComponentFromDouble(i,j,k,0,250);
+				 		}
+      }
+	 
+	 
+	}}
 
+}
 void VolVis::RenderPrediction()
 {
 	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction =
@@ -1608,7 +1695,8 @@ void VolVis::RenderPrediction()
      //vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
        //vtkSmartPointer<vtkVolumeRayCastMapper>::New();
      volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
-     //volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
+    
+	 //volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
 	 vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper_randomForest =
        vtkSmartPointer<vtkSmartVolumeMapper>::New();
 	 //PTR<vtkVolumeTextureMapper3D> volumeMapper_randomForest = PTR<vtkVolumeTextureMapper3D>::New();
@@ -1632,7 +1720,7 @@ void VolVis::RenderPrediction()
 	  volumeColor->AddRGBPoint(150,  1, 0, 0);
       volumeColor->AddRGBPoint(550, 0, 1, 0);
 	  volumeColor->AddRGBPoint(1200, 0, 0, 1);
-	  volumeColor->AddRGBPoint(1400, 1, 0.7, 0);
+	  volumeColor->AddRGBPoint(1400, 1, 0.27, 0);
 	  volumeColor->AddRGBPoint(1500, 1, 1, 0);
 	  volumeColor->AddRGBPoint(1600, 0.5, 0, 0.5);
 	 
@@ -1695,6 +1783,7 @@ void VolVis::RenderPrediction()
     vtkSmartPointer<vtkVolume> volume =
      vtkSmartPointer<vtkVolume>::New();
     volume->SetMapper(volumeMapper);
+	
     volume->SetProperty(volumeProperty);
 	mainRenderer->RemoveAllViewProps();
 	//mainRenderer->Clear();

@@ -117,7 +117,7 @@ public slots:
  
   virtual void slotExit();
   //virtual void Slotupdate(int);
-
+  void LoadTrainFile();
   void setSliceNumberLeft(int);
   void setSliceNumberCenter(int);
   void setSliceNumberRight(int);
@@ -144,6 +144,7 @@ public slots:
   void setPredictFileRandomForest();
   void setIndexFile();
   void updateOpacity();
+  
   //void renderMainLeft();
   //void renderMainCenter();
     

@@ -23,7 +23,7 @@
    <widget class="QSlider" name="horizontalSliderLeft">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>650</x>
       <y>230</y>
       <width>160</width>
       <height>19</height>
@@ -36,7 +36,7 @@
    <widget class="QVTKWidget" name="qvtkWidgetLeft" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
+      <x>650</x>
       <y>10</y>
       <width>201</width>
       <height>201</height>
@@ -46,7 +46,7 @@
    <widget class="QVTKWidget" name="qvtkWidgetRight" native="true">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>400</x>
       <y>10</y>
       <width>201</width>
       <height>201</height>
@@ -56,7 +56,7 @@
    <widget class="QVTKWidget" name="qvtkWidgetCenter" native="true">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>170</x>
       <y>10</y>
       <width>201</width>
       <height>201</height>
@@ -66,7 +66,7 @@
    <widget class="QSlider" name="horizontalSliderRight">
     <property name="geometry">
      <rect>
-      <x>510</x>
+      <x>410</x>
       <y>230</y>
       <width>160</width>
       <height>19</height>
@@ -82,7 +82,7 @@
    <widget class="QSlider" name="horizontalSliderCenter">
     <property name="geometry">
      <rect>
-      <x>260</x>
+      <x>170</x>
       <y>230</y>
       <width>160</width>
       <height>19</height>
@@ -95,9 +95,9 @@
    <widget class="QPushButton" name="pushButtonBlue">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>80</y>
-      <width>75</width>
+      <x>950</x>
+      <y>90</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -118,9 +118,9 @@
    <widget class="QPushButton" name="pushButtonRed">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>20</y>
-      <width>75</width>
+      <x>950</x>
+      <y>30</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -131,9 +131,9 @@
    <widget class="QPushButton" name="pushButtonGreen">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>50</y>
-      <width>75</width>
+      <x>950</x>
+      <y>60</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -144,28 +144,30 @@
    <widget class="QPushButton" name="pushButtonEraser">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>220</y>
-      <width>75</width>
+      <x>950</x>
+      <y>210</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>ERASER</string>
+     <string>Eraser</string>
     </property>
    </widget>
    <widget class="QPushButton" name="TrainSVM">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>10</y>
+      <x>10</x>
+      <y>80</y>
       <width>131</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>21</pointsize>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -175,15 +177,17 @@
    <widget class="QPushButton" name="PredictSVM">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>80</y>
+      <x>10</x>
+      <y>140</y>
       <width>131</width>
       <height>51</height>
      </rect>
     </property>
     <property name="font">
      <font>
-      <pointsize>21</pointsize>
+      <pointsize>22</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -193,9 +197,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxRed">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>20</y>
-      <width>81</width>
+      <x>880</x>
+      <y>30</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -212,9 +216,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxGreen">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>50</y>
-      <width>81</width>
+      <x>880</x>
+      <y>60</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -231,9 +235,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxBlue">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>80</y>
-      <width>81</width>
+      <x>880</x>
+      <y>90</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -250,20 +254,20 @@
    <widget class="QPushButton" name="pushButtonOpacity">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>220</y>
-      <width>91</width>
+      <x>880</x>
+      <y>210</y>
+      <width>51</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Opacity Update</string>
+     <string>Update</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>730</x>
+      <x>870</x>
       <y>0</y>
       <width>61</width>
       <height>16</height>
@@ -283,7 +287,7 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>820</x>
+      <x>950</x>
       <y>0</y>
       <width>46</width>
       <height>13</height>
@@ -304,7 +308,7 @@
     <property name="geometry">
      <rect>
       <x>690</x>
-      <y>260</y>
+      <y>280</y>
       <width>601</width>
       <height>371</height>
      </rect>
@@ -323,8 +327,8 @@
    <widget class="QVTKWidget" name="qvtkWidgetMain" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>260</y>
+      <x>30</x>
+      <y>280</y>
       <width>601</width>
       <height>371</height>
      </rect>
@@ -333,11 +337,18 @@
    <widget class="QLabel" name="label_6">
     <property name="geometry">
      <rect>
-      <x>1100</x>
+      <x>1080</x>
       <y>10</y>
-      <width>91</width>
+      <width>121</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>SVM Training Time</string>
@@ -346,11 +357,18 @@
    <widget class="QLabel" name="label_7">
     <property name="geometry">
      <rect>
-      <x>1090</x>
+      <x>1100</x>
       <y>90</y>
       <width>101</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>SVM Preditcion Time</string>
@@ -359,11 +377,18 @@
    <widget class="QLabel" name="label_8">
     <property name="geometry">
      <rect>
-      <x>1050</x>
+      <x>1010</x>
       <y>40</y>
-      <width>141</width>
+      <width>191</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Random Forest Training Time</string>
@@ -372,52 +397,71 @@
    <widget class="QLabel" name="label_9">
     <property name="geometry">
      <rect>
-      <x>1050</x>
+      <x>1000</x>
       <y>120</y>
-      <width>151</width>
-      <height>16</height>
+      <width>211</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Random Forest Prediction Time</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="SVMTrainingTime">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1220</x>
       <y>10</y>
-      <width>113</width>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
    </widget>
    <widget class="QLineEdit" name="RandomForestTrainingTime">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1220</x>
       <y>40</y>
-      <width>113</width>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
    </widget>
    <widget class="QLineEdit" name="RandomForestPredictionTime">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1220</x>
       <y>120</y>
-      <width>113</width>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
    </widget>
    <widget class="QLineEdit" name="SVMPredictionTime">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
+      <x>1220</x>
       <y>90</y>
-      <width>113</width>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
@@ -426,7 +470,7 @@
     <property name="geometry">
      <rect>
       <x>80</x>
-      <y>640</y>
+      <y>650</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -446,7 +490,7 @@
     <property name="geometry">
      <rect>
       <x>750</x>
-      <y>640</y>
+      <y>650</y>
       <width>541</width>
       <height>31</height>
      </rect>
@@ -465,9 +509,9 @@
    <widget class="QPushButton" name="pushButtonOrange">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>110</y>
-      <width>75</width>
+      <x>950</x>
+      <y>120</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -488,9 +532,9 @@
    <widget class="QPushButton" name="pushButtonYellow">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>140</y>
-      <width>75</width>
+      <x>950</x>
+      <y>150</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -511,9 +555,9 @@
    <widget class="QPushButton" name="pushButtonPurple">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>170</y>
-      <width>75</width>
+      <x>950</x>
+      <y>180</y>
+      <width>41</width>
       <height>23</height>
      </rect>
     </property>
@@ -534,9 +578,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxOrange">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>110</y>
-      <width>81</width>
+      <x>880</x>
+      <y>120</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -553,9 +597,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxYellow">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>140</y>
-      <width>81</width>
+      <x>880</x>
+      <y>150</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -572,9 +616,9 @@
    <widget class="QDoubleSpinBox" name="doubleSpinBoxPurple">
     <property name="geometry">
      <rect>
-      <x>730</x>
-      <y>170</y>
-      <width>81</width>
+      <x>880</x>
+      <y>180</y>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -591,11 +635,19 @@
    <widget class="QLabel" name="label_10">
     <property name="geometry">
      <rect>
-      <x>1120</x>
-      <y>160</y>
-      <width>71</width>
-      <height>16</height>
+      <x>1110</x>
+      <y>170</y>
+      <width>101</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>SVM Accuracy</string>
@@ -604,22 +656,32 @@
    <widget class="QLabel" name="label_11">
     <property name="geometry">
      <rect>
-      <x>1070</x>
-      <y>190</y>
-      <width>121</width>
-      <height>16</height>
+      <x>1040</x>
+      <y>200</y>
+      <width>171</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Random Forest Accuracy</string>
     </property>
    </widget>
    <widget class="QLineEdit" name="SVM_accuracy">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
-      <y>160</y>
-      <width>113</width>
+      <x>1220</x>
+      <y>170</y>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
@@ -638,11 +700,14 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="RandomForest_accuracy">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>1200</x>
-      <y>190</y>
-      <width>113</width>
+      <x>1220</x>
+      <y>200</y>
+      <width>61</width>
       <height>20</height>
      </rect>
     </property>
@@ -655,6 +720,213 @@
     </property>
     <property name="cursor">
      <cursorShape>WaitCursor</cursorShape>
+    </property>
+    <property name="inputMask">
+     <string notr="true"/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="LoadTrain">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <italic>false</italic>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Load Scribbling</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>240</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="text">
+     <string>Slice Through</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>250</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>z - Axis</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>250</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>x - Axis</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>250</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>y - Axis</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_15">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>10</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>sec</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_16">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>40</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>sec</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_17">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>90</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>sec</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_18">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>120</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>sec</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_19">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>170</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>%</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_20">
+    <property name="geometry">
+     <rect>
+      <x>1290</x>
+      <y>200</y>
+      <width>46</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>%</string>
     </property>
    </widget>
   </widget>
