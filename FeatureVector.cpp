@@ -39,13 +39,13 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 	FILE *outputFileTest_3,*outputFileTest2_3,*outputFileTest3_3,*outputFileIndex3;
 	FILE *outputFileTest_4,*outputFileTest4,*outputFileTest5,*outputFileTest2_4,*outputFileTest3_4,*outputFileIndex4;
 	outputFileTest = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test.dat","w");
-	outputFileTest2 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test2.dat","w");
-	outputFileTest3 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test3.dat","w");
+	//outputFileTest2 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test2.dat","w");
+	//outputFileTest3 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test3.dat","w");
 	//outputFileTest4 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test4.dat","w");
 	//outputFileTest5 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Test5.dat","w");
 	outputFileTrain = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train.dat","w");
-	outputFileTrain2 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train2.dat","w");
-	outputFileTrain3 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train3.dat","w");
+	//outputFileTrain2 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train2.dat","w");
+	//outputFileTrain3 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train3.dat","w");
 	//outputFileTrain4 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train4.dat","w");
 	//outputFileTrain5 = fopen("E:/SemesterIII/Thesis/VolVis_build/Results/Train5.dat","w");
 	
@@ -62,15 +62,14 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 	double *g = new double[3];
 	//double *g8 = new double[8];
 	//vtkSmartPointer<vtkDataArray> g8 = vtkSmartPointer<vtkDataArray>::New();
-	std::stringstream ssTest,ssTrain,ssIndex,ssIndex1;
-  extent[0] = extent[1] = extent[2] = extent[3] = extent[4] = extent[5] = 0; 
+	extent[0] = extent[1] = extent[2] = extent[3] = extent[4] = extent[5] = 0; 
   colorImage1->GetExtent(extent);
  int one1=0,two1=0,three1=0;
-  cout<<"Extents "<<extent[0]<<" "<<extent[1]<<" "<<extent[2]<<" "<<extent[3]<<" "<<extent[4]<<" "<<extent[5]<<" "<<endl;
+  
   std::clock_t c_start= std::clock();
-  double sq_gradientMagnitude = (g[0]*g[0]) +(g[1]*g[1])+(g[2]*g[2]);
-				    double gradient_magnitude = sqrt(sq_gradientMagnitude);
-					//cout<<rasterize_array[x+(y*x_dim)+((z)*x_dim*y_dim)];
+  //double sq_gradientMagnitude = (g[0]*g[0]) +(g[1]*g[1])+(g[2]*g[2]);
+	//			    double gradient_magnitude = sqrt(sq_gradientMagnitude);
+					
 					double *g1 = new double[3];
 					double *g2 = new double[3];
 					double *g3 = new double[3];
@@ -343,8 +342,9 @@ colorImage1->GetPointGradient(x-1,y+1,z,colorImage1->GetPointData()->GetScalars(
 					if((rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]!=0))// || ((x+(y*x_dim)+(z*x_dim*y_dim))%1000 == 0))
 						{
 							fprintf(outputFileTrainValue,"%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]);
-							fprintf(outputFileTrain,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),x,y,z);
-							if((x==0)||(x==(x_dim-1))||(y==0)||(y==(x_dim-1))||(z==0)||(z==(z_dim-1)))
+							fprintf(outputFileTrain,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%d 10:%d 11:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],intensity2[4],gradientMagnitude[5],intensity2[2],intensity2[3],intensity2[0],intensity2[1],intensity2[5],intensity2[6],x,y,z);
+							//fprintf(outputFileTrain,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),x,y,z);
+							/*if((x==0)||(x==(x_dim-1))||(y==0)||(y==(x_dim-1))||(z==0)||(z==(z_dim-1)))
 								{
 									//fprintf(outputFileTrain2,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,gradientMagnitude5,g5[0],g5[1],g5[2],0,gradient_magnitude4,gradient_magnitude2,gradient_magnitude6,gradient_magnitude8);
 									fprintf(outputFileTrain2,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),meanIntensity2,sqrt(varianceIntensity2),mean2,sqrt(variance2));
@@ -357,14 +357,14 @@ colorImage1->GetPointGradient(x-1,y+1,z,colorImage1->GetPointData()->GetScalars(
 									fprintf(outputFileTrain2,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),meanIntensity2,sqrt(varianceIntensity2),mean2,sqrt(variance2));
 									fprintf(outputFileTrain3,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),meanIntensity,sqrt(varianceIntensity),mean,sqrt(variance));
 									//fprintf(outputFileTrain3,"%d 1:%lf 2:%lf 3:%lf 4:%d 5:%d 6:%d 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf 13:%lf 14:%lf 15:%lf 16:%lf 17:%lf 18:%lf 19:%lf 20:%lf 21:%lf 22:%lf 23:%lf 24:%lf 25:%lf 26:%lf 27:%lf 28:%lf 29:%lf 30:%lf 31:%lf 32:%lf 33:%lf 34:%lf 35:%lf 36:%lf 37:%lf 38:%lf 39:%lf 40:%lf 41:%lf 42:%lf 43:%lf 44:%lf 45:%lf 46:%lf 47:%lf 48:%lf 49:%lf 50:%lf 51:%lf 52:%lf 53:%lf 54:%lf 55:%lf 56:%lf 57:%lf 58:%lf 59:%lf 60:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g5[0],g5[1],g5[2],x,y,z,gradient_magnitude5,colorImage1->GetScalarComponentAsFloat(x+(y*x_dim)+(z*x_dim*y_dim)),gradient_magnitude1,gradient_magnitude2,gradient_magnitude3,gradient_magnitude4,gradient_magnitude6,gradient_magnitude7,gradient_magnitude8,gradient_magnitude9,gradient_magnitude10,gradient_magnitude11,gradient_magnitude12,gradient_magnitude13,gradient_magnitude14,gradient_magnitude15,gradient_magnitude16,gradient_magnitude17,gradient_magnitude18,gradient_magnitude19,gradient_magnitude20,gradient_magnitude21,gradient_magnitude22,gradient_magnitude23,gradient_magnitude24,gradient_magnitude25,gradient_magnitude26,gradient_magnitude27,colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+((z+1)*x_dim*y_dim)));
-								}
+								}*/
 							fprintf(outputFileIndex1,"%d\n",x+(y*x_dim)+(z*x_dim*y_dim));
 					   
 					}
-						
-					   fprintf(outputFileTest,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),x,y,z);
+						fprintf(outputFileTest,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%d 10:%d 11:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],intensity2[4],gradientMagnitude[5],intensity2[2],intensity2[3],intensity2[0],intensity2[1],intensity2[5],intensity2[6],x,y,z);
+					   //fprintf(outputFileTest,"%d 1:%lf 2:%lf 3:%lf 4:%lf 5:%lf 6:%d 7:%d 8:%d\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),x,y,z);
 					   fprintf(outputFileIndex,"%d\n",x+(y*x_dim)+(z*x_dim*y_dim));
-					   if((x==0)||(x==(x_dim-1))||(y==0)||(y==(x_dim-1))||(z==0)||(z==(z_dim-1)))
+					   /*if((x==0)||(x==(x_dim-1))||(y==0)||(y==(x_dim-1))||(z==0)||(z==(z_dim-1)))
 					   {
 						            fprintf(outputFileTest2,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),meanIntensity2,sqrt(varianceIntensity2),mean2,sqrt(variance2));
 									fprintf(outputFileTest3,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,g[0],g[1],g[2],gradientMagnitude[5],colorImage1->GetScalarComponentAsFloat(x,y,z,0),meanIntensity,sqrt(varianceIntensity),mean,sqrt(variance));
@@ -378,7 +378,7 @@ colorImage1->GetPointGradient(x-1,y+1,z,colorImage1->GetPointData()->GetScalars(
 								//fprintf(outputFileTest2,"%d 1:%d 2:%d 3:%d 4:%lf 5:%lf 6:%lf 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],x,y,z,gradient_magnitude5,g5[0],g5[1],g5[2],colorImage1->GetScalarComponentAsFloat(x+(y*x_dim)+(z*x_dim*y_dim)),gradient_magnitude4,gradient_magnitude2,gradient_magnitude6,gradient_magnitude8);
 					   //fprintf(outputFileTest3,"%d 1:%lf 2:%lf 3:%lf 4:%d 5:%d 6:%d 7:%lf 8:%lf 9:%lf 10:%lf 11:%lf 12:%lf 13:%lf 14:%lf 15:%lf 16:%lf 17:%lf 18:%lf 19:%lf 20:%lf 21:%lf 22:%lf 23:%lf 24:%lf 25:%lf 26:%lf 27:%lf 28:%lf 29:%lf 30:%lf 31:%lf 32:%lf 33:%lf 34:%lf 35:%lf 36:%lf 37:%lf 38:%lf 39:%lf 40:%lf 41:%lf 42:%lf 43:%lf 44:%lf 45:%lf 46:%lf 47:%lf 48:%lf 49:%lf 50:%lf 51:%lf 52:%lf 53:%lf 54:%lf 55:%lf 56:%lf 57:%lf 58:%lf 59:%lf 60:%lf\n",rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)],g5[0],g5[1],g5[2],x,y,z,gradient_magnitude5,colorImage1->GetScalarComponentAsFloat(x+(y*x_dim)+(z*x_dim*y_dim)),gradient_magnitude1,gradient_magnitude2,gradient_magnitude3,gradient_magnitude4,gradient_magnitude6,gradient_magnitude7,gradient_magnitude8,gradient_magnitude9,gradient_magnitude10,gradient_magnitude11,gradient_magnitude12,gradient_magnitude13,gradient_magnitude14,gradient_magnitude15,gradient_magnitude16,gradient_magnitude17,gradient_magnitude18,gradient_magnitude19,gradient_magnitude20,gradient_magnitude21,gradient_magnitude22,gradient_magnitude23,gradient_magnitude24,gradient_magnitude25,gradient_magnitude26,gradient_magnitude27,colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+(z*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+((z-1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+(y*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x-1)+((y+1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat(x+((y-1)*x_dim)+((z+1)*x_dim*y_dim)),colorImage1->GetScalarComponentAsFloat((x+1)+((y-1)*x_dim)+((z+1)*x_dim*y_dim)));
 					   }
-					   
+					   */
 					   
 			
 					}
@@ -386,8 +386,8 @@ colorImage1->GetPointGradient(x-1,y+1,z,colorImage1->GetPointData()->GetScalars(
 		  cout<<"time taken " <<end-c_start<<endl;
 		  cout<<"one :"<<one1<<"two1 "<<two1<<"three1 "<<three1<<endl;
 		  fclose(outputFileTest);
-		  fclose(outputFileTest2);
-		  fclose(outputFileTest3);
+		  //fclose(outputFileTest2);
+		  //fclose(outputFileTest3);
 		//  fclose(outputFileTest4);
 		 // fclose(outputFileTest5);
 		//   fclose(outputFileTest_2);
@@ -402,8 +402,8 @@ colorImage1->GetPointGradient(x-1,y+1,z,colorImage1->GetPointData()->GetScalars(
 		  //fclose(outputFileTest2_4);
 		  //fclose(outputFileTest3_4);
 		  fclose(outputFileTrain);
-		  fclose(outputFileTrain2);
-		  fclose(outputFileTrain3);
+		  //fclose(outputFileTrain2);
+		  //fclose(outputFileTrain3);
 		 // fclose(outputFileTrain4);
 		 // fclose(outputFileTrain5);
 		  fclose(outputFileIndex);

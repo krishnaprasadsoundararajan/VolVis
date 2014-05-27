@@ -965,7 +965,7 @@ VolVis::VolVis()
    mainRenderer = vtkSmartPointer<vtkRenderer>::New();
    mainRenderer->SetBackground(.6, .5, .4);    
    mainRenderer_randomForest = vtkSmartPointer<vtkRenderer>::New();
-   mainRenderer->SetBackground(.6, .5, .4); 
+   mainRenderer_randomForest->SetBackground(.2, .5, .4); 
    
     this->pushButtonBlue->setAutoFillBackground(true);	
 	this->pushButtonRed->setAutoFillBackground(true);
@@ -1771,8 +1771,8 @@ void VolVis::RenderPrediction()
     volumeProperty->SetColor(volumeColor);
     volumeProperty->SetScalarOpacity(volumeScalarOpacity);
     volumeProperty->SetGradientOpacity(volumeGradientOpacity);
-    volumeProperty->SetInterpolationTypeToLinear();
-	//volumeProperty->SetInterpolationTypeToNearest();
+    //volumeProperty->SetInterpolationTypeToLinear();
+	volumeProperty->SetInterpolationTypeToNearest();
     volumeProperty->ShadeOn();
     volumeProperty->SetAmbient(0.4);
     volumeProperty->SetDiffuse(0.6);
