@@ -109,8 +109,7 @@ void FeatureVector::CreateTestTrainData(int x_dim,int y_dim,int z_dim,int (*rast
 			one1++;   
    if((rasterize_array[x+(y*x_dim)+(z*x_dim*y_dim)]!=0)) //=== Changed needs to be removed later
    {
-			   //cout<<x<<" "<<y<<" "<<z<<" "<<z<<endl;
-			  // GetPointGradient(x,y,z,colorImage1,g);
+			  			  // GetPointGradient(x,y,z,colorImage1,g);
 			   colorImage1->GetPointGradient(x,y,z,colorImage1->GetPointData()->GetScalars(),g);
 			  // colorImage1->GetVoxelGradient(x,y,z,colorImage1->GetPointData()->GetScalars(),g8);
 			  // if(g[0]!=0 && g[1]!=0 && g[2]!=0)
