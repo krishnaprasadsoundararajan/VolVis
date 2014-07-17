@@ -5,8 +5,10 @@
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
+#include <vtkHAVSVolumeMapper.h>
 #include <vtkSmartPointer.h>
 #include <vtkImageData.h>
+#include <vtkImageShiftScale.h>
 #include <vtkImageResliceMapper.h>
 #include <vtkImageMapper3D.h>
 #include <vtkImageSliceMapper.h>
@@ -39,6 +41,7 @@
 #include <vtkSmartVolumeMapper.h>
 #include <vtkVolume.h>
 #include <vtkVolumeRayCastMapper.h>
+#include <vtkGPUVolumeRayCastMapper.h>
 
 #include <vtkLookupTable.h>
 
@@ -963,7 +966,7 @@ VolVis::VolVis()
 
 
    mainRenderer = vtkSmartPointer<vtkRenderer>::New();
-   mainRenderer->SetBackground(.6, .5, .4);    
+   mainRenderer->SetBackground(1, 1, 1);    
    mainRenderer_randomForest = vtkSmartPointer<vtkRenderer>::New();
    mainRenderer_randomForest->SetBackground(.2, .5, .4); 
    
@@ -1435,6 +1438,7 @@ ifstream myfile1(indexFileName.c_str());
       {
 		  //rasterize_array[num1] = num2 +5;
 		  //lut->SetTableValue(num1,0.7,0.3,0,1);
+		  
 		  colorImagePrediction->SetScalarComponentFromDouble(x1,y1,z1,0,1600);
 		  six++;
       // read next line and print it... but how?
@@ -1690,12 +1694,23 @@ void VolVis::RenderPrediction()
 
 	  vtkSmartPointer<vtkVolumeRayCastCompositeFunction> rayCastFunction_randomForest =
       vtkSmartPointer<vtkVolumeRayCastCompositeFunction>::New();
-	  vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper =
-       vtkSmartPointer<vtkSmartVolumeMapper>::New();
-     //vtkSmartPointer<vtkVolumeRayCastMapper> volumeMapper =
-       //vtkSmartPointer<vtkVolumeRayCastMapper>::New();
-     volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
-    
+	  //vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper =
+       //vtkSmartPointer<vtkSmartVolumeMapper>::New();
+     vtkSmartPointer<vtkGPUVolumeRayCastMapper> volumeMapper =
+       vtkSmartPointer<vtkGPUVolumeRayCastMapper>::New();
+	 //colorImagePrediction->SetScalarTypeToUnsignedChar();
+	 vtkSmartPointer<vtkImageShiftScale> shiftScale = 
+		 vtkSmartPointer<vtkImageShiftScale>::New();
+	 shiftScale->SetOutputScalarTypeToUnsignedShort();
+	 shiftScale->SetInputConnection(colorImagePrediction->GetProducerPort());
+	 shiftScale->Update();
+	 colorImagePrediction->Update();
+	 colorImagePrediction->UpdateData();
+	 colorImagePrediction->UpdateInformation();
+	 volumeMapper->SetInputConnection(colorImagePrediction->GetProducerPort());
+	 //volumeMapper->SetBlendModeToMaximumIntensity();
+	 //volumeMapper->SetAutoAdjustSampleDistances();
+	 //rayCastFunction->SetCompositeMethodToInterpolateFirst();
 	 //volumeMapper->SetVolumeRayCastFunction(rayCastFunction);
 	 vtkSmartPointer<vtkSmartVolumeMapper> volumeMapper_randomForest =
        vtkSmartPointer<vtkSmartVolumeMapper>::New();
@@ -1752,8 +1767,8 @@ void VolVis::RenderPrediction()
     vtkSmartPointer<vtkPiecewiseFunction> volumeGradientOpacity =
       vtkSmartPointer<vtkPiecewiseFunction>::New();
     volumeGradientOpacity->AddPoint(0,   0.0);
-    volumeGradientOpacity->AddPoint(90,  0.5);
-    volumeGradientOpacity->AddPoint(100, 1.0);
+    	volumeGradientOpacity->AddPoint(990, 0.2);
+    volumeGradientOpacity->AddPoint(1000, 1.0);
  
    // The VolumeProperty attaches the color and opacity functions to the
    // volume, and sets other volume properties.  The interpolation should
@@ -1770,22 +1785,35 @@ void VolVis::RenderPrediction()
       vtkSmartPointer<vtkVolumeProperty>::New();
     volumeProperty->SetColor(volumeColor);
     volumeProperty->SetScalarOpacity(volumeScalarOpacity);
-    volumeProperty->SetGradientOpacity(volumeGradientOpacity);
-    //volumeProperty->SetInterpolationTypeToLinear();
-	volumeProperty->SetInterpolationTypeToNearest();
-    volumeProperty->ShadeOn();
-    volumeProperty->SetAmbient(0.4);
-    volumeProperty->SetDiffuse(0.6);
-    volumeProperty->SetSpecular(0.2);
+    //volumeProperty->SetGradientOpacity(volumeGradientOpacity);
+   volumeProperty->SetInterpolationTypeToLinear();
+   
+	//volumeProperty->SetInterpolationTypeToNearest();
+	volumeProperty->ShadeOn();
+    volumeProperty->SetAmbient(1);
+    volumeProperty->SetDiffuse(0.51);
+    volumeProperty->SetSpecular(0.51);
 	
     // The vtkVolume is a vtkProp3D (like a vtkActor) and controls the position
     /// and orientation of the volume in world coordinates.
-    vtkSmartPointer<vtkVolume> volume =
+
+
+	
+
+    /*vtkSmartPointer<vtkHAVSVolumeMapper> volumeMapper1 =
+    vtkSmartPointer<vtkHAVSVolumeMapper>::New();
+  volumeMapper->SetInputConnection(colorImagePrediction_randomForest->GetProducerPort());
+  volumeMapper1->SetLevelOfDetail(false);
+  volumeMapper1->SetGPUDataStructures(false);
+  volumeMapper1->SetKBufferSizeTo2();
+	*/
+	
+	vtkSmartPointer<vtkVolume> volume =
      vtkSmartPointer<vtkVolume>::New();
     volume->SetMapper(volumeMapper);
 	
     volume->SetProperty(volumeProperty);
-	mainRenderer->RemoveAllViewProps();
+	//--=-=-=mainRenderer->RemoveAllViewProps();
 	//mainRenderer->Clear();
     // Finally, add the volume to the renderer
     mainRenderer->AddViewProp(volume);
@@ -1854,6 +1882,7 @@ void VolVis::RenderPrediction()
 	this->qvtkWidgetMain_2->GetRenderWindow()->GetInteractor()->Render();
 
 	this->qvtkWidgetMain_2->GetRenderWindow()->AddRenderer(mainRenderer_randomForest);
+
 	this->qvtkWidgetMain_2->GetRenderWindow()->Render();
 	this->qvtkWidgetMain_2->update();
  
