@@ -4,8 +4,9 @@
 int main( int argc, char** argv )
 {
   // QT Stuff
+
   QApplication app( argc, argv );
-  VolVis VolVis;
+  VolVis VolVis( argc, argv);
   VolVis.show();
   
   

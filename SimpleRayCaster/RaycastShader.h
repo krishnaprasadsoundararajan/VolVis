@@ -4,6 +4,9 @@
 
 #include "GLSLProgram.h"
 #include "GLError.h"
+#include "glm-0.9.5.4\glm\glm\glm.hpp"
+#include "glm-0.9.5.4\glm\glm\ext.hpp"
+#include  "glm-0.9.5.4\glm\glm\gtc\matrix_transform.hpp"
 
 /// One pass raycasting shader (bundles GLSL program and uniform parameters)
 class RaycastShader
@@ -27,6 +30,7 @@ public:
 	float get_isovalue() const { return m_isovalue; }
 
 	void set_voxelsize( float sx, float sy, float sz );
+	bool diffuseSwitch();
 
 private:
 	GL::GLSLProgram*  m_shader;
@@ -43,8 +47,11 @@ private:
 					  m_loc_lightColor,
 					  m_loc_lightPosition,
 					  m_loc_specularMaterial,
-					  m_loc_specularityExponent;
+					  m_loc_specularityExponent,
+					  m_loc_shadingSwitches;
 	float m_isovalue;
+	glm::vec3 shadingOn;
+	glm::mat3 mDiffuseMaterial;
 	float m_voxelsize[3];
 };
 

@@ -16,10 +16,8 @@
 #include <vtkVolumeRayCastCompositeFunction.h>
 #include <vtkColorTransferFunction.h>
 #include <vtkPiecewiseFunction.h>
-//#include <QPushButton>
 
 
-#include "ui_VolVis.h"
 
 class VolVis : public QMainWindow, private Ui::VolVis
 {
@@ -101,7 +99,7 @@ public:
 	int extent[6];
 
   // Constructor/Destructor
-  VolVis(); 
+  VolVis(int, char**); 
   void Render();
   void RenderPrediction();
   ~VolVis();

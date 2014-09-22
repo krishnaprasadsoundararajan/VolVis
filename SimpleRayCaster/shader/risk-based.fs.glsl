@@ -306,11 +306,11 @@ void main(void)
 		vec3 sum = p_color_red + p_color_green + p_color_blue + p_color_yellow;
 		float opacity_sum = p_opacity_red + p_opacity_green + p_opacity_blue + p_opacity_yellow;
 		
-		if(opacity_sum!=0.0)
+	/*	if(opacity_sum!=0.0)
 			sum =sum/opacity_sum;
 		 else
 			 sum = vec3(0,0,0);
-		
+	*/	
 		 vec4 final_color = vec4(sum.r,sum.g,sum.b,p_opacity_red + p_opacity_green + p_opacity_blue + p_opacity_yellow);
 		
 		
@@ -318,7 +318,9 @@ void main(void)
 		// if(opacity_sum!=0)
 		//dst = dst + (1.0 - dst.a) * final_color + ambient() + diffuse() + specular();
 		vec3 lightDirection = normalize(uLightPosition - vec3(aposition));
-		dst = dst + (1.0 - dst.a) * shading_diffuse( normalize(normal_vector), lightDirection  ) * final_color;
+		 float sv = shading_diffuse( normalize(normal_vector), lightDirection  ) + shading_specular( normalize(normal_vector), lightDirection);
+		dst = dst + (1.0 - dst.a) * (vec4( sv*vec3(final_color), final_color.a) + final_color);
+		//dst = dst + (1.0 - dst.a) * shading_diffuse( normalize(normal_vector), lightDirection  ) * final_color;
 		//dst = dst + (1.0 - dst.a) * (shading_diffuse( normalize(normal_vector), lightDirection ) + shading_specular( normalize(normal_vector), lightDirection)) * final_color; //final_color;
 		 
 		// advance ray position

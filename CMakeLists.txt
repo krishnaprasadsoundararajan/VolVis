@@ -8,6 +8,10 @@ endif()
 PROJECT(VolVis)
 
 find_package(VTK REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(GLUT   REQUIRED)
+find_package(GLEW   REQUIRED)
+
 include(${VTK_USE_FILE})
 
 if(${VTK_VERSION} VERSION_GREATER "6" AND VTK_QT_VERSION VERSION_GREATER "4")
@@ -19,7 +23,8 @@ else()
   include(${QT_USE_FILE})
 endif()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} ${GLEW_INCLUDE_DIR}
+	${GLUT_INCLUDE_DIR})
 
 file(GLOB UI_FILES *.ui)
 file(GLOB QT_WRAP *.h)
@@ -38,16 +43,22 @@ if(${VTK_VERSION} VERSION_GREATER "6" AND VTK_QT_VERSION VERSION_GREATER "4")
 else()
   QT4_WRAP_UI(UISrcs ${UI_FILES})
   QT4_WRAP_CPP(MOCSrcs ${QT_WRAP})
-  add_executable(VolVis MACOSX_BUNDLE ${CXX_FILES} ${UISrcs} ${MOCSrcs})
+  add_executable(VolVis MACOSX_BUNDLE ${CXX_FILES} ${UISrcs} ${MOCSrcs} )
 
   if(VTK_LIBRARIES)
     if(${VTK_VERSION} VERSION_LESS "6")
-      target_link_libraries(VolVis ${VTK_LIBRARIES} QVTK)
+      target_link_libraries(VolVis ${VTK_LIBRARIES} QVTK  ${OPENGL_LIBRARIES}
+	${GLEW_LIBRARY}
+	${GLUT_LIBRARIES})
     else()
-      target_link_libraries(VolVis ${VTK_LIBRARIES})
+      target_link_libraries(VolVis ${VTK_LIBRARIES} ${OPENGL_LIBRARIES}
+	${GLEW_LIBRARY}
+	${GLUT_LIBRARIES})
     endif()
   else()
-    target_link_libraries(VolVis vtkHybrid QVTK vtkViews ${QT_LIBRARIES})
+    target_link_libraries(VolVis vtkHybrid QVTK vtkViews ${QT_LIBRARIES} ${OPENGL_LIBRARIES}
+	${GLEW_LIBRARY}
+	${GLUT_LIBRARIES})
   endif()
 endif()
 

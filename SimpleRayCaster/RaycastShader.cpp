@@ -11,6 +11,13 @@
 using namespace GL;
 using namespace std;
 
+bool RaycastShader::diffuseSwitch()
+{	
+	
+		shadingOn.b = 0;
+		return checkGLError( "RaycastShader::diffuseSwitch()" );
+	
+}
 //------------------------------------------------------------------------------
 bool RaycastShader::init()
 {
@@ -60,8 +67,7 @@ bool RaycastShader::load_shader( const char* vertex_shader, const char* fragment
 	m_loc_lightPosition = m_shader->getUniformLocation("uLightPosition");
 	m_loc_specularMaterial = m_shader->getUniformLocation("uSpecularMaterial");
 	m_loc_specularityExponent = m_shader->getUniformLocation( "uSpecularityExponent");
-
-	
+	m_loc_shadingSwitches = m_shader->getUniformLocation( " shadingSwitch" );
 	return checkGLError( "RaycastShader::load_shader()" );
 
 	
@@ -112,12 +118,14 @@ void RaycastShader::bind( GLuint opacitytex, GLuint fronttex, GLuint backtex, GL
 
 const float mSpecularityExponent = 40.0f;
 	const glm::vec3 vLightColor1 = glm::vec3(1.0f, 1.0f, 1.0f);
+	shadingOn = glm::vec3(1.0f, 1.0f, 1.0f);
 	const glm::vec3 vLightPosition1 = glm::vec3(10.0f, 1.0f, 9.0f);
 	glUniform3fv(m_loc_lightPosition, 1, glm::value_ptr(vLightPosition1));
 	glUniformMatrix4fv(m_loc_model, 1, GL_FALSE,glm::value_ptr(ModelViewMatrix));
 	glUniformMatrix3fv(m_loc_ambientMaterial, 1, GL_FALSE, glm::value_ptr(mAmbientMaterial));
 	glUniformMatrix3fv(m_loc_diffuseMaterial, 1, GL_FALSE, glm::value_ptr(mDiffuseMaterial));
 	 glUniform3fv(m_loc_lightColor, 1, glm::value_ptr(vLightColor1));
+	 glUniform3fv(m_loc_shadingSwitches, 1, glm::value_ptr(shadingOn));
 	   glUniformMatrix3fv(m_loc_specularMaterial, 1, GL_FALSE, glm::value_ptr(mSpecularMaterial));
     glUniform1f(m_loc_specularityExponent, mSpecularityExponent);
 

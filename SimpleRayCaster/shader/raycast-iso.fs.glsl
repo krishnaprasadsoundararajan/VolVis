@@ -7,36 +7,52 @@ uniform mat3 uAmbientMaterial;
 uniform vec3 uLightColor;
 uniform vec3 uLightPosition;
 uniform mat3 uDiffuseMaterial;
+uniform mat4 model;
 varying vec3 anormal;
 varying vec4 aposition;
 varying vec4 color;
 varying vec2 tc;
+uniform vec3 shadingSwitch;
+
 uniform mat3 uSpecularMaterial;
 uniform float uSpecularityExponent;
-vec3 anormal1;
+
 // stepsize for ray traversal
 const float stepsize = 0.001;
-vec3 ambient() {
+/*vec4 ambient (vec4(final_Color))
+{
 
-    return uLightColor * uAmbientMaterial;
+    return uLightColor * final_Color;
+}*/
+
+float shading_diffuse( vec3 L, vec3 N )
+{
+	return max(dot(L,N),0.0); // TODO: Add specular term
 }
 
-vec3 diffuse() {
+float shading_specular(vec3 L, vec3 N)
+{
+   vec3 bisector = normalize(normalize(vec3(aposition)) - L);
+   float cosAngle = max(dot(bisector, normalize(N)), 0);
+	return pow(cosAngle, 90.0f)*uDiffuseMaterial;
+	
+}
+/*vec3 diffuse() {
 
     vec3 pl = normalize(uLightPosition - vec3(aposition));
-    float cosAngle = max(dot(pl, normalize(anormal1)), 0);
-
-    return uLightColor * uDiffuseMaterial * cosAngle;
+    float cosAngle = max(dot(pl, normalize(normal_vector), 0);
+	return uLightColor * final_color * cosAngle;
+    //return uLightColor * uDiffuseMaterial * cosAngle;
 }
 
 vec3 specular() {
 
     vec3 bisector = normalize(normalize(-vec3(aposition)) + normalize((uLightPosition - vec3(aposition))));
 
-    float cosAngle = max(dot(bisector, normalize(anormal1)), 0);
-
-    return uLightColor * uSpecularMaterial * pow(cosAngle, uSpecularityExponent);
-}
+    float cosAngle = max(dot(bisector, normalize(normal_vector)), 0);
+	return uLightColor * final_color * pow(cosAngle, uSpecularityExponent);
+    //return uLightColor * uSpecularMaterial * pow(cosAngle, uSpecularityExponent);
+}*/
 
 float spotLight() {
 
@@ -50,6 +66,7 @@ float spotLight() {
 
     return pow(cosAngle, 40.0f);
 }
+
 void main(void)
 {
 	// ray start & end position
@@ -80,10 +97,26 @@ void main(void)
 
 		// transfer function
 		
+		// get probability classes
 		vec4 src = texture3D( luttex, ray_in + ray );
+		
+		vec3 rayPosition = ray_in + ray;
+		
+#if 1 // NO BOUNDARY FOR NOW
+		vec3 lutres = vec3( 94.0, 150.0, 150.0 );
+		vec3 voxelsize = 1.0 / lutres;
+		
+		vec4 src_next_x = texture3D( luttex, ray_in + ray + vec3(1.0,0.0,0.0)*voxelsize ); 
+		vec4 src_pre_x  = texture3D( luttex, ray_in + ray - vec3(1.0,0.0,0.0)*voxelsize ); 
+		vec4 src_next_y = texture3D( luttex, ray_in + ray + vec3(0.0,1.0,0.0)*voxelsize ); 
+		vec4 src_pre_y  = texture3D( luttex, ray_in + ray - vec3(0.0,1.0,0.0)*voxelsize ); 
+		vec4 src_next_z = texture3D( luttex, ray_in + ray + vec3(0.0,0.0,1.0)*voxelsize ); 
+		vec4 src_pre_z  = texture3D( luttex, ray_in + ray - vec3(0.0,0.0,1.0)*voxelsize ); 
+		
+#else // FIRST ATTEMPT AT BOUNDARY HANDLING
+		//  handle boundaries x
 		vec4 src_next_x = vec4(0,0,0,0);
 		vec4 src_pre_x = vec4(0,0,0,0);
-		vec3 rayPosition = ray_in + ray;
 		if( rayPosition.r == 0)
 		{
 		src_next_x = texture3D( luttex, rayPosition);
@@ -104,9 +137,9 @@ void main(void)
 		src_pre_x  = texture3D( luttex, temp);
 		}
 		
+		//  handle boundaries y
 		vec4 src_next_y = vec4(0,0,0,0);
 		vec4 src_pre_y = vec4(0,0,0,0);
-		
 		if( rayPosition.g == 0)
 		{
 		src_next_y = texture3D( luttex, rayPosition);
@@ -127,9 +160,9 @@ void main(void)
 		src_pre_y  = texture3D( luttex, temp);
 		}
 		
+		//  handle boundaries x
 		vec4 src_next_z = vec4(0,0,0,0);
 		vec4 src_pre_z = vec4(0,0,0,0);
-		
 		if( rayPosition.b == 0)
 		{
 		src_next_z = texture3D( luttex, rayPosition);
@@ -149,84 +182,101 @@ void main(void)
 		vec3 temp = vec3(rayPosition.x,rayPosition.y, rayPosition.z+1);
 		src_pre_z  = texture3D( luttex, temp);
 		}
-		mat4 gradient;
-		gradient[0][0] = (src_next_x.r - src_pre_x.r)/2;
-		gradient[1][0] = (src_next_y.r - src_pre_y.r)/2;
-		gradient[2][0] = (src_next_z.r - src_pre_z.r)/2;
-		gradient[3][0] = 0;
+#endif
 		
-		gradient[0][1] = (src_next_x.g - src_pre_x.g)/2;
-		gradient[1][1] = (src_next_y.g - src_pre_y.g)/2;
-		gradient[2][1] = (src_next_z.g - src_pre_z.g)/2;
-		gradient[3][1] = 0;
 		
-		gradient[0][2] = (src_next_x.b - src_pre_x.b)/2;
-		gradient[1][2] = (src_next_y.b - src_pre_y.b)/2;
-		gradient[2][2] = (src_next_z.b - src_pre_z.b)/2;
-		gradient[3][2] = 0;
+		mat4 jacobian_matrix;
+		jacobian_matrix[0][0] = (src_next_x.r - src_pre_x.r)/2;
+		jacobian_matrix[1][0] = (src_next_y.r - src_pre_y.r)/2;
+		jacobian_matrix[2][0] = (src_next_z.r - src_pre_z.r)/2;
+		jacobian_matrix[3][0] = 0;
+		
+		jacobian_matrix[0][1] = (src_next_x.g - src_pre_x.g)/2;
+		jacobian_matrix[1][1] = (src_next_y.g - src_pre_y.g)/2;
+		jacobian_matrix[2][1] = (src_next_z.g - src_pre_z.g)/2;
+		jacobian_matrix[3][1] = 0;
+		
+		jacobian_matrix[0][2] = (src_next_x.b - src_pre_x.b)/2;
+		jacobian_matrix[1][2] = (src_next_y.b - src_pre_y.b)/2;
+		jacobian_matrix[2][2] = (src_next_z.b - src_pre_z.b)/2;
+		jacobian_matrix[3][2] = 0;
 				
-		gradient[0][3] = (src_next_x.a - src_pre_x.a)/2;
-		gradient[1][3] = (src_next_y.a - src_pre_y.a)/2;
-		gradient[2][3] = (src_next_z.a - src_pre_z.a)/2;
-		gradient[3][3] = 0;
-			// Note: Above should really be done with exponential!
+		jacobian_matrix[0][3] = (src_next_x.a - src_pre_x.a)/2;
+		jacobian_matrix[1][3] = (src_next_y.a - src_pre_y.a)/2;
+		jacobian_matrix[2][3] = (src_next_z.a - src_pre_z.a)/2;
+		jacobian_matrix[3][3] = 0;
+			 
+		
                 //src.a = 0.01;
 		vec3 color_red = vec3(1,0,0);
 		vec3 color_green = vec3(0,1,0);
 		vec3 color_blue = vec3(0,0,1);
 		vec3 color_yellow = vec3(1,1,0);
 		
-		float opacity_red = texture1D(opacitytex,0).a;
+		float opacity_red =  texture1D(opacitytex,0).a;
 		float opacity_green = texture1D(opacitytex,0.25).a;
 		float opacity_blue = texture1D(opacitytex,0.5).a;
 		float opacity_yellow =texture1D(opacitytex,1).a;
 		
-		color_red = color_red * opacity_red;
-		color_green = color_green*opacity_green;
-		color_blue = color_blue*opacity_blue;
-		color_yellow = color_yellow*opacity_yellow;
-		float maximum = (src.r > src.g ? src.r : src.g) > (src.b > src.a ? src.b : src.a) ? (src.r > src.g ? src.r : src.g) : (src.b > src.a ? src.b : src.a);
+		vec4 weighted_Opacity = vec4(opacity_red *src.r, opacity_green*src.g, opacity_blue*src.b, opacity_yellow*src.a);
+	
+		vec4 gradient_normal = weighted_Opacity * (jacobian_matrix);
+		//gradient_normal = gradient_normal*inverse(gl_ModelViewMatrix);
+		vec3 normal_vector =vec3(gradient_normal.x,gradient_normal.y,gradient_normal.z);
+		vec4 isosrc = vec4(0,0,0,0);
 		if(src.r < 0.5)
-			src.r = 0;
+			isosrc.r = 0;
+		else
+			isosrc.r = src.r;
 		if(src.g < 0.5)
-			src.g = 0;
+			isosrc.g = 0;
+		else
+			isosrc.g = src.g;
 		if(src.b < 0.5)
-			src.b = 0;
+			isosrc.b = 0;
+		else
+			isosrc.b = src.b;
 		if(src.a < 0.5)
-			src.a = 0;
+			isosrc.a = 0;
+		else
+			isosrc.a = src.a;
 		
-		vec3 p_color_red = color_red * src.r;
-		vec3 p_color_green = color_green *src.g;
-		vec3 p_color_blue = color_blue*src.b;
-		vec3 p_color_yellow = color_yellow*src.a;
+		vec3 p_color_red = color_red * isosrc.r * opacity_red;
+		vec3 p_color_green = color_green *isosrc.g * opacity_green;
+		vec3 p_color_blue = color_blue*isosrc.b * opacity_blue;
+		vec3 p_color_yellow = color_yellow*isosrc.a * opacity_yellow;
 		
-		float p_opacity_red = opacity_red*src.r;
-		float p_opacity_green = opacity_green*src.g;
-		float p_opacity_blue = opacity_blue*src.b;
-		float p_opacity_yellow = opacity_yellow*src.a;
-		vec4 opacity_gradient = vec4(src.r,src.g,src.b,src.a);
-		vec4 gradient_normal =  opacity_gradient * gradient   ;
-		anormal1 =vec3(gradient_normal.x,gradient_normal.y,gradient_normal.z);
-		anormal1 = normalize(anormal1);
+		float p_opacity_red = opacity_red*isosrc.r;
+		float p_opacity_green = opacity_green*isosrc.g;
+		float p_opacity_blue = opacity_blue*isosrc.b;
+		float p_opacity_yellow = opacity_yellow*isosrc.a;
 		
 		vec3 sum = p_color_red + p_color_green + p_color_blue + p_color_yellow;
 		float opacity_sum = p_opacity_red + p_opacity_green + p_opacity_blue + p_opacity_yellow;
-		 if(opacity_sum!=0)
+		
+		/*if(opacity_sum!=0.0)
 			sum =sum/opacity_sum;
 		 else
 			 sum = vec3(0,0,0);
-		vec4 final_color = vec4(sum.r,sum.g,sum.b,p_opacity_red + p_opacity_green + p_opacity_blue + p_opacity_yellow);
+		*/
+		 vec4 final_color = vec4(sum.r,sum.g,sum.b,opacity_sum);
 		
 		
 		// front-to-back compositing
-		//if( opacity_sum > 0.9)
-			dst = dst + (1.0 - dst.a) * final_color;
-
+		// if(opacity_sum!=0)
+		//dst = dst + (1.0 - dst.a) * final_color + ambient() + diffuse() + specular();
+		vec3 lightDirection = normalize(uLightPosition - vec3(aposition));
+		 float sv = shading_diffuse( normalize(normal_vector), lightDirection  ) + shading_specular( normalize(normal_vector), lightDirection);
+		dst = dst + (1.0 - dst.a) * (vec4( sv*vec3(final_color), final_color.a) + final_color);
+		//dst = dst + (1.0 - dst.a) * (shading_diffuse( normalize(normal_vector), lightDirection  ) * weighted_Opacity + (uLightColor*weighted_Opacity) + shading_specular( normalize(normal_vector), lightDirection  ) * weighted_Opacity); 
+		//dst = dst + (1.0 - dst.a) * (shading_diffuse( normalize(normal_vector), lightDirection  ) * final_color + (uLightColor*final_color) + shading_specular( normalize(normal_vector), lightDirection  ) * final_color); 
+		//dst = dst + (1.0 - dst.a) * (shading_diffuse( normalize(normal_vector), lightDirection ) + shading_specular( normalize(normal_vector), lightDirection)) * final_color; //final_color;
+		 
 		// advance ray position
 		ray += step;
 	}
 
-	gl_FragColor = dst  + ambient() + diffuse() + specular();
+	gl_FragColor = dst ;
 
 	
 	// Uncomment the following code to show transfer function for debugging

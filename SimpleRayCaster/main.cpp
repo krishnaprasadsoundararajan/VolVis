@@ -35,7 +35,7 @@ SimpleRaycaster   g_raycaster;
 VolumeDataHeader* g_volume;
 //LookupTable       g_lookuptable;
 
-float g_rotx=0.f, g_roty=0.f;
+float g_rotx=0.f, g_roty=0.f, g_rotz= 90.f;
 
 //------------------------------------------------------------------------------
 //	Forward declarations
@@ -50,33 +50,41 @@ VolumeDataHeader* load_volume( const char* filename, int verb, void** data_ptr )
 //------------------------------------------------------------------------------
 
 enum Menu {
-	MENU_SHADER_DEFAULT,
-	MENU_SHADER_ISOSURFACE,
-	MENU_SHADER_FRONT_CUBE,
-	MENU_RELOAD_LUT
+	MENU_SHADER_ISO,
+	MENU_SHADER_TAGGED,
+	MENU_SHADER_RISK,
+	MENU_PROBABILITY_WEIGTED,
+	DIFFUSE_SWITCH
 };
-
+string vsName, fsName;
 void menu( int entry )
-{
+{	
 	switch( entry )
 	{
-	case MENU_SHADER_DEFAULT:
+	case MENU_SHADER_ISO:
+		fsName = "shader/raycast-iso.fs.glsl";
+		vsName = "shader/raycast.vs.glsl";
 		g_raycaster.getRaycastShader().load_shader
 			("shader/raycast.vs.glsl","shader/raycast-iso.fs.glsl");
 		break;
-	case MENU_SHADER_ISOSURFACE:
+	case MENU_SHADER_TAGGED:
 		g_raycaster.getRaycastShader().load_shader
-			("shader/raycast.vs.glsl","shader/raycast-tagged.fs.glsl");
+			("shader/raycast.vs.glsl","shader/raycast-tagged_new.fs.glsl");
 		break;
-	case MENU_SHADER_FRONT_CUBE:
+	case MENU_SHADER_RISK:
 		g_raycaster.getRaycastShader().load_shader
 			("shader/raycast.vs.glsl","shader/risk-based.fs.glsl");
 		break;
-	case MENU_RELOAD_LUT:
+	case MENU_PROBABILITY_WEIGTED:
 		g_raycaster.getRaycastShader().load_shader
-			("shader/raycast.vs.glsl","shader/raycast-minimal.fs.glsl");
+			("shader/raycast.vs.glsl","shader/raycast-probability-weighted.fs.glsl");
 		//g_lookuptable.reload();
 		//g_raycaster.setLookupTable( );
+		break;
+	case DIFFUSE_SWITCH:
+		g_raycaster.getRaycastShader().diffuseSwitch();
+		g_raycaster.getRaycastShader().load_shader
+			("shader/raycast.vs.glsl","shader/raycast-tagged.fs.glsl");
 		break;
 	}
 	
@@ -86,12 +94,14 @@ void menu( int entry )
 void setupMenu()
 {
 	glutCreateMenu( menu );
-	glutAddMenuEntry( "Shader ISO",    MENU_SHADER_DEFAULT );
-	glutAddMenuEntry( "Shader TAGGED", MENU_SHADER_ISOSURFACE );
-	glutAddMenuEntry( "Shader RISK", MENU_SHADER_FRONT_CUBE );
-	glutAddMenuEntry( "Reload PROBABILITY WEIGHTED", MENU_RELOAD_LUT );	
+	glutAddMenuEntry( "Shader ISO",    MENU_SHADER_ISO );
+	glutAddMenuEntry( "Shader TAGGED", MENU_SHADER_TAGGED );
+	glutAddMenuEntry( "Shader RISK", MENU_SHADER_RISK );
+	glutAddMenuEntry( "PROBABILITY WEIGHTED", MENU_PROBABILITY_WEIGTED );	
+	glutAddMenuEntry( "DiffuseLight On/Off", DIFFUSE_SWITCH);
 	glutAttachMenu( GLUT_RIGHT_BUTTON );
 }
+
 
 //------------------------------------------------------------------------------
 //	Application setup
@@ -203,45 +213,46 @@ void render()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glEnable( GL_DEPTH_TEST );
-	GLfloat dlr = 0.30f;
-	GLfloat dlg = 0.30f;
-	GLfloat dlb = 0.30f;
+	//GLfloat dlr = 1.0f;
+	//GLfloat dlg = 1.0f;
+	//GLfloat dlb = 1.0f;
 
 //ambient light color variables
-	GLfloat alr = 0.40f;
-	GLfloat alg = 0.40f;
-	GLfloat alb = 0.90f;
+	GLfloat alr = 1.0f;
+	GLfloat alg = 1.0f;
+	GLfloat alb = 1.0f;
 
 //light position variables
 	GLfloat lx = 0.0f;
-	GLfloat ly = 10.0f;
-	GLfloat lz = 20.0f;
-	GLfloat lw = 0.0f;
-	GLfloat redDiffuseMaterial[] = {1.0, 0.0, 0.0}; //set the material to red
+	GLfloat ly = 0.0f;
+	GLfloat lz = 0.0f;
+	GLfloat lw = 1.0f;
+	GLfloat redDiffuseMaterial[] = {1.0, 1.0, 1.0}; //set the material to red
     GLfloat whiteSpecularMaterial[] = {1.0, 1, 1}; //set the material to white
-    GLfloat greenEmissiveMaterial[] = {0,1,0}; //set the material to green
+    GLfloat greenEmissiveMaterial[] = {1,1,1}; //set the material to green
     
 	//GLfloat whiteSpecularLight[] = {1.0, 1.0, 1.0}; //set the light specular to white
     //GLfloat blackAmbientLight[] = {0.0, 0.0, 0.0}; //set the light ambient to black
     //GLfloat whiteDiffuseLight[] = {1.0, 1.0, 1.0}; //set the diffuse light to white
     //GLfloat blankMaterial[] = {0.0, 0.0, 0.0}; //set the diffuse  light to white
 
-	GLfloat DiffuseLight[] = {dlr, dlg, dlb};
+	//GLfloat DiffuseLight[] = {dlr, dlg, dlb};
 	GLfloat AmbientLight[] = {alr, alg, alb};
 	GLfloat mShininess[] = {128};
 	
-	glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); 
+	//glLightfv (GL_LIGHT0, GL_DIFFUSE, DiffuseLight); 
 	glLightfv (GL_LIGHT1, GL_AMBIENT, AmbientLight);
 	
 	GLfloat LightPosition[] = {lx, ly, lz, lw};
 	glLightfv (GL_LIGHT0, GL_POSITION, LightPosition);
-	glLightfv (GL_LIGHT1, GL_POSITION, LightPosition);
 	gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	// Camera	
 	glLoadIdentity();
 	glTranslatef( 0,0,-5.f );
 	glRotatef( g_rotx, 1,0,0 );
 	glRotatef( g_roty, 0,1,0 );
+	glRotatef(g_rotz,0,0,1);
+	
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,whiteSpecularMaterial);
     glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, redDiffuseMaterial);
@@ -261,6 +272,9 @@ void reshape( int width, int height )
 	gluPerspective( 30, aspect, 0.1, 100 );
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
+	GLfloat LightPosition[] = {0.0,0.0,0.0,1.0};
+	glLightfv (GL_LIGHT0, GL_POSITION, LightPosition); //added
+	
 }
 
 void motion( int x, int y )
@@ -273,8 +287,10 @@ void motion( int x, int y )
 
 	g_rotx = (2.f*(y / (float)viewport[3]) - 1.f) *  90.f;
 	g_roty = (2.f*(x / (float)viewport[2]) - 1.f) * 180.f;
-
+	GLfloat LightPosition[] = {0.0,0.0,0.0,1.0};
+	glLightfv (GL_LIGHT0, GL_POSITION, LightPosition);
 	glutPostRedisplay();
+	
 }
 
 //------------------------------------------------------------------------------
@@ -299,7 +315,7 @@ int main( int argc, char* argv[] )
 	glutCreateWindow( "SimpleRaycaster" );
 	glutReshapeFunc ( reshape  );
 	glutDisplayFunc ( render   );
-	glutMotionFunc  ( motion );	
+	glutMotionFunc  ( motion  );	
 
 	// setup GLEW
 	GLenum glew_err = glewInit();
